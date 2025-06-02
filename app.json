@@ -21,33 +21,6 @@
         }
       ]
     ],
-"fonts": [
-      {
-        "asset": "./assets/fonts/PlusJakartaSans-Regular.ttf"
-      },
-      {
-        "asset": "./assets/fonts/PlusJakartaSans-Medium.ttf"
-      },
-      {
-        "asset": "./assets/fonts/PlusJakartaSans-SemiBold.ttf"
-      },
-      {
-        "asset": "./assets/fonts/PlusJakartaSans-Bold.ttf"
-      },
-      {
-        "asset": "./assets/fonts/Nunito-Regular.ttf"
-      },
-      {
-        "asset": "./assets/fonts/Nunito-Medium.ttf"
-      },
-      {
-        "asset": "./assets/fonts/Nunito-SemiBold.ttf"
-      },
-      {
-        "asset": "./assets/fonts/Nunito-Bold.ttf"
-      }
-    ]
-    ,
     "experiments": {
       "typedRoutes": true,
 
