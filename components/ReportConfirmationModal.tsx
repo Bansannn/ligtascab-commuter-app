@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { theme } from '../utils/theme';
 
@@ -15,10 +9,10 @@ interface ReportConfirmationModalProps {
   ticketNumber: string;
 }
 
-export default function ReportConfirmationModal({ 
-  visible, 
-  onClose, 
-  ticketNumber 
+export default function ReportConfirmationModal({
+  visible,
+  onClose,
+  ticketNumber,
 }: ReportConfirmationModalProps) {
   return (
     <Modal
@@ -26,7 +20,7 @@ export default function ReportConfirmationModal({
       transparent
       animationType="fade"
       onRequestClose={onClose}
-    >
+      statusBarTranslucent>
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
           <View style={styles.iconContainer}>
@@ -36,7 +30,7 @@ export default function ReportConfirmationModal({
           </View>
 
           <Text style={styles.title}>Report Submitted</Text>
-          
+
           <Text style={styles.subtitle}>
             Your report has been successfully submitted and is now being reviewed by our team.
           </Text>
@@ -54,40 +48,31 @@ export default function ReportConfirmationModal({
           <View style={styles.infoSection}>
             <View style={styles.infoItem}>
               <Feather name="clock" size={16} color={theme.colors.primary[600]} />
-              <Text style={styles.infoText}>
-                Review typically takes 24-48 hours
-              </Text>
+              <Text style={styles.infoText}>Review typically takes 24-48 hours</Text>
             </View>
-            
+
             <View style={styles.infoItem}>
-              <Feather name="bell" size={16} color={theme.colors.primary[600]} />
-              <Text style={styles.infoText}>
-                You'll receive notifications about updates
-              </Text>
+              <Feather name="bell" size={16} color={theme.colors.primary[600]} />{' '}
+              <Text style={styles.infoText}>You&apos;ll receive notifications about updates</Text>
             </View>
-            
+
             <View style={styles.infoItem}>
               <Feather name="shield" size={16} color={theme.colors.primary[600]} />
-              <Text style={styles.infoText}>
-                Your report is completely confidential
-              </Text>
+              <Text style={styles.infoText}>Your report is completely confidential</Text>
             </View>
           </View>
 
           <View style={styles.actionSection}>
-            <Text style={styles.nextStepsTitle}>What happens next?</Text>
+            <Text style={styles.nextStepsTitle}>What happens next?</Text>{' '}
             <Text style={styles.nextStepsText}>
               1. Our team will investigate your report{'\n'}
-              2. We'll contact the driver if necessary{'\n'}
-              3. You'll receive an update via notification{'\n'}
+              2. We&apos;ll contact the driver if necessary{'\n'}
+              3. You&apos;ll receive an update via notification{'\n'}
               4. Appropriate action will be taken if violations are confirmed
             </Text>
           </View>
 
-          <TouchableOpacity
-            style={styles.doneButton}
-            onPress={onClose}
-          >
+          <TouchableOpacity style={styles.doneButton} onPress={onClose}>
             <Text style={styles.doneButtonText}>Done</Text>
           </TouchableOpacity>
         </View>
@@ -127,7 +112,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: '#22c55e', // Success green color
+    backgroundColor: '#22c55e',
     justifyContent: 'center',
     alignItems: 'center',
   },

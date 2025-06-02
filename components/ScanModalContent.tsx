@@ -19,7 +19,7 @@ export default function ScanModalContent({
 }: ScanModalContentProps) {
   const router = useRouter();
   return (
-    <Modal visible={visible} transparent animationType="none">
+    <Modal visible={visible} transparent animationType="none" statusBarTranslucent>
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           {isLoading ? (
@@ -41,7 +41,7 @@ export default function ScanModalContent({
                   </View>
                 </View>
               </View>
-                <Text style={styles.tricycleCardDescription}>Are the details correct?</Text>
+              <Text style={styles.tricycleCardDescription}>Are the details correct?</Text>
               <View style={styles.tricycleCardButtonContainer}>
                 <Pressable
                   style={[styles.tricycleCardButton, styles.noButton]}
@@ -76,7 +76,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: 15,
-  },  tricycleCardHeader: {
+  },
+  tricycleCardHeader: {
     fontFamily: theme.typography.fontFamily.primary.bold,
     fontSize: theme.typography.fontSize['2xl'],
     color: theme.colors.gray[900],
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
   },
   tricycleCardContent: {
     flexDirection: 'column',
-  
+
     width: '100%',
     alignItems: 'center',
   },
@@ -114,25 +115,28 @@ const styles = StyleSheet.create({
   },
   noButton: {
     backgroundColor: theme.colors.gray[200],
-  },  noButtonText: {
+  },
+  noButtonText: {
     fontFamily: theme.typography.fontFamily.primary.medium,
     fontSize: theme.typography.fontSize.md,
     color: theme.colors.gray[800],
   },
   yesButton: {
     backgroundColor: theme.colors.primary[600],
-  },  yesButtonText: {
+  },
+  yesButtonText: {
     fontFamily: theme.typography.fontFamily.primary.semiBold,
     fontSize: theme.typography.fontSize.md,
     color: theme.colors.white,
   },
   tricycleDetailsContainer: {
-    flexDirection: 'column', // Changed from 'row' to 'column'
-    alignItems: 'center', // Center items in column
-    gap: 10, // Add some gap between the two detail sections
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 10,
     width: '100%',
     marginTop: 10,
-  },  tricycleDetailsTitle: {
+  },
+  tricycleDetailsTitle: {
     fontFamily: theme.typography.fontFamily.primary.bold,
     fontSize: theme.typography.fontSize['3xl'],
     color: theme.colors.primary[600],

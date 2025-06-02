@@ -13,14 +13,15 @@ export default function TricycleDetailsCard({ title, name, children }: TricycleD
     <View style={styles.cardProfile}>
       {children}
       <View>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.title}>{title.toString()}</Text>
+        <Text style={styles.name}>{name.toString()}</Text>
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({  cardProfile: {
+const styles = StyleSheet.create({
+  cardProfile: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,

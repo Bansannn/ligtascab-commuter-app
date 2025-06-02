@@ -28,10 +28,10 @@ export default function InRideOptions() {
     // Generate ticket number
     const ticketNumber = generateTicketNumber();
     setReportTicketNumber(ticketNumber);
-    
+
     // Here you can handle the report submission (e.g., send to API)
     console.log('Report submitted:', { violation, comment, ticketNumber });
-    
+
     // Close report modal and show confirmation
     setShowReportModal(false);
     setShowReportConfirmation(true);
@@ -52,7 +52,7 @@ export default function InRideOptions() {
   const handleRatingSubmit = (rating: number, comment: string) => {
     // Here you can handle the rating submission (e.g., send to API)
     console.log('Rating submitted:', { rating, comment });
-    
+
     // Close modal and navigate to home
     setShowRatingModal(false);
     router.push({
@@ -63,36 +63,36 @@ export default function InRideOptions() {
   const handleRatingClose = () => {
     setShowRatingModal(false);
   };
-
   return (
-    <View style={styles.container}>      <Pressable style={styles.report} onPress={handleReport}>
+    <View style={styles.container}>
+      <Pressable style={styles.report} onPress={handleReport}>
         <Text style={styles.reportText}>Report</Text>
       </Pressable>
       <Pressable style={styles.home}>
         <Feather
           name="home"
           size={24}
-          color={theme.colors.primary[600]} // Use theme color
+          color={theme.colors.primary[600]}
           onPress={() => {
             router.push({ pathname: '/inside/home' });
-          }}        />
+          }}
+        />
       </Pressable>
-      <Pressable
-        style={styles.end}
-        onPress={handleEndRide}>
+      <Pressable style={styles.end} onPress={handleEndRide}>
         <Text style={styles.endText}>End Ride</Text>
-      </Pressable>      <RatingModal
+      </Pressable>
+      <RatingModal
         visible={showRatingModal}
         onClose={handleRatingClose}
         onSubmit={handleRatingSubmit}
       />
-      
+
       <ReportModal
         visible={showReportModal}
         onClose={handleReportClose}
         onSubmit={handleReportSubmit}
       />
-      
+
       <ReportConfirmationModal
         visible={showReportConfirmation}
         onClose={handleReportConfirmationClose}
@@ -108,37 +108,39 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
-    gap: 12, // Increased gap
-  },  report: {
+    gap: 12,
+  },
+  report: {
     paddingHorizontal: 20,
     paddingVertical: 12,
     alignItems: 'center',
     borderColor: theme.colors.danger,
     borderWidth: 1,
     borderRadius: 32,
-  },  reportText: {
+  },
+  reportText: {
     fontFamily: theme.typography.fontFamily.primary.medium,
     fontSize: theme.typography.fontSize.sm,
     color: theme.colors.danger,
   },
   home: {
-    padding: 10, // Simplified padding for a circular button
+    padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 2, // Slightly thinner border
-    borderRadius: 22, // (padding + iconSize/2 + borderWidth) approx for a circle with 24px icon
-    borderColor: theme.colors.primary[600], // Use theme color
+    borderWidth: 2,
+    borderRadius: 22,
+    borderColor: theme.colors.primary[600],
   },
   end: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 12, // Adjusted padding
-    backgroundColor: theme.colors.primary[600], // Use theme color
+    paddingVertical: 12,
+    backgroundColor: theme.colors.primary[600],
     borderRadius: 32,
   },
   endText: {
     fontFamily: theme.typography.fontFamily.primary.semiBold,
-    fontSize: theme.typography.fontSize.md, // Adjusted font size for consistency
+    fontSize: theme.typography.fontSize.md,
     color: theme.colors.white,
     fontWeight: '600',
   },

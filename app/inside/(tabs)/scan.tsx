@@ -3,7 +3,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
 import { BarcodeScanningResult, CameraType, CameraView, useCameraPermissions } from 'expo-camera';
 import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ScanModalContent from '~/components/ScanModalContent';
 import ScanModalError from '~/components/ScanModalError';
 import { fetchTricycleDetails } from '~/services/tricycles';
@@ -11,12 +11,10 @@ import { Tricycle } from '~/types/types';
 import { theme } from '../../../utils/theme';
 
 export default function Scan() {
-  //Camera States
   const [permission, requestPermission] = useCameraPermissions();
   const [cameraDisabled, setCameraDisabled] = useState(false);
   const [facing, setFacing] = useState<CameraType>('back');
 
-  //Modal States
   const [visible, setVisible] = useState(false);
   const [scanResult, setScanResult] = useState<string | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
@@ -120,25 +118,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center', // Center the card vertically for a more balanced look
-    backgroundColor: theme.colors.gray[100], // Added a light background to the screen
+    justifyContent: 'center',
+    backgroundColor: theme.colors.gray[100],
   },
   card: {
     position: 'relative',
-    // height: '90%', // Remove fixed height, let content define it
-    width: '90%', // Make card slightly less wide
-    maxWidth: 400, // Add a max width for larger screens
+    width: '90%',
+    maxWidth: 400,
     backgroundColor: theme.colors.primary[600],
-    borderRadius: 20, // Increased border radius for a softer look
+    borderRadius: 20,
     alignItems: 'center',
-    // justifyContent: 'center', // Remove to allow natural flow from top
-    padding: 24, // Unified padding
-    gap: 20, // Increased gap between elements
-    elevation: 5, // Add some shadow for depth
+    // justifyContent: 'center', // Remove to allow natural flow from top    padding: 24,
+    gap: 20,
+    elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
+    paddingBottom: 30,
+    paddingHorizontal: 20,
   },
   cardHeader: {
     position: 'absolute',
@@ -161,26 +159,25 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontFamily: theme.typography.fontFamily.primary.bold,
-    fontSize: theme.typography.fontSize['2xl'], // Slightly smaller title for balance
-    fontWeight: '700',
+    fontSize: theme.typography.fontSize['3xl'],
     color: theme.colors.white,
-    marginTop: 36, // Add margin to account for the overlapping header
+    marginTop: 50,
   },
   cardDescription: {
     textAlign: 'center',
     fontFamily: theme.typography.fontFamily.secondary.regular,
     fontSize: theme.typography.fontSize.md,
-    color: theme.colors.gray[100], // Lighter text for description
-    paddingHorizontal: 10, // Add some horizontal padding for readability
+    color: theme.colors.gray[100],
+    paddingHorizontal: 10,
   },
   cardButton: {
     width: '100%',
     backgroundColor: theme.colors.white,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 14, // Adjusted padding
+    paddingVertical: 14,
     paddingHorizontal: 16,
-    borderRadius: 25, // Pill-shaped button
+    borderRadius: 25,
   },
   buttonText: {
     fontFamily: theme.typography.fontFamily.primary.bold,
@@ -193,13 +190,12 @@ const styles = StyleSheet.create({
   },
   cameraContainer: {
     position: 'relative',
-    width: '100%',
-    aspectRatio: 1, // Make it a square
-    // height: '50%', // Remove fixed height, use aspectRatio
+    width: '80%',
+    aspectRatio: 1,
     justifyContent: 'center',
-    borderWidth: 6, // Slightly thinner border
+    borderWidth: 6,
     borderColor: theme.colors.white,
-    borderRadius: 10, // Add some radius to camera view
+    borderRadius: 10,
     overflow: 'hidden',
   },
   buttonContainer: {

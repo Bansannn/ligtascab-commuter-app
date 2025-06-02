@@ -38,22 +38,13 @@ export const fontSize = {
   '5xl': 48,
 };
 
-export const fontWeight = {
-  regular: '400',
-  medium: '500',
-  semiBold: '600',
-  bold: '700',
-};
-
 export const typography = {
   fontFamily,
   fontSize,
-  fontWeight,
 };
 
 export type FontFamily = typeof fontFamily;
 export type FontSize = typeof fontSize;
-export type FontWeight = typeof fontWeight;
 
 export const fonts = {
   PlusJakartaSans_400Regular,

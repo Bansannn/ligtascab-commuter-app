@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  Pressable,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { theme } from '../utils/theme';
@@ -34,11 +33,9 @@ export default function ReportModal({ visible, onClose, onSubmit }: ReportModalP
   const [selectedViolation, setSelectedViolation] = useState('');
   const [comment, setComment] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
-
   const handleSubmit = () => {
     if (selectedViolation && comment.trim()) {
       onSubmit(selectedViolation, comment);
-      // Reset state
       setSelectedViolation('');
       setComment('');
       setShowDropdown(false);
@@ -51,7 +48,7 @@ export default function ReportModal({ visible, onClose, onSubmit }: ReportModalP
   };
 
   const getSelectedViolationLabel = () => {
-    const violation = violationOptions.find(v => v.id === selectedViolation);
+    const violation = violationOptions.find((v) => v.id === selectedViolation);
     return violation ? violation.label : 'Select a violation';
   };
 
@@ -61,7 +58,7 @@ export default function ReportModal({ visible, onClose, onSubmit }: ReportModalP
       transparent
       animationType="fade"
       onRequestClose={onClose}
-    >
+      statusBarTranslucent>
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
           <View style={styles.header}>
@@ -70,30 +67,33 @@ export default function ReportModal({ visible, onClose, onSubmit }: ReportModalP
               <Feather name="x" size={24} color={theme.colors.gray[600]} />
             </TouchableOpacity>
           </View>
-
           <Text style={styles.subtitle}>
-            Help us improve the service by reporting any issues with your ride.
-          </Text>          <View style={styles.content}>
-            {/* Violation Dropdown */}
+            Help us improve the service by reporting any issues with your ride.{' '}
+          </Text>{' '}
+          <View style={styles.content}>
             <View style={styles.dropdownSection}>
               <Text style={styles.sectionLabel}>Type of Violation *</Text>
               <TouchableOpacity
                 style={[
                   styles.dropdownButton,
-                  { borderColor: selectedViolation ? theme.colors.primary[600] : theme.colors.gray[300] }
+                  {
+                    borderColor: selectedViolation
+                      ? theme.colors.primary[600]
+                      : theme.colors.gray[300],
+                  },
                 ]}
-                onPress={() => setShowDropdown(!showDropdown)}
-              >
-                <Text style={[
-                  styles.dropdownButtonText,
-                  { color: selectedViolation ? theme.colors.gray[900] : theme.colors.gray[500] }
-                ]}>
+                onPress={() => setShowDropdown(!showDropdown)}>
+                <Text
+                  style={[
+                    styles.dropdownButtonText,
+                    { color: selectedViolation ? theme.colors.gray[900] : theme.colors.gray[500] },
+                  ]}>
                   {getSelectedViolationLabel()}
                 </Text>
-                <Feather 
-                  name={showDropdown ? "chevron-up" : "chevron-down"} 
-                  size={20} 
-                  color={theme.colors.gray[600]} 
+                <Feather
+                  name={showDropdown ? 'chevron-up' : 'chevron-down'}
+                  size={20}
+                  color={theme.colors.gray[600]}
                 />
               </TouchableOpacity>
 
@@ -104,14 +104,14 @@ export default function ReportModal({ visible, onClose, onSubmit }: ReportModalP
                       key={option.id}
                       style={[
                         styles.dropdownItem,
-                        selectedViolation === option.id && styles.dropdownItemSelected
+                        selectedViolation === option.id && styles.dropdownItemSelected,
                       ]}
-                      onPress={() => handleViolationSelect(option.id)}
-                    >
-                      <Text style={[
-                        styles.dropdownItemText,
-                        selectedViolation === option.id && styles.dropdownItemTextSelected
-                      ]}>
+                      onPress={() => handleViolationSelect(option.id)}>
+                      <Text
+                        style={[
+                          styles.dropdownItemText,
+                          selectedViolation === option.id && styles.dropdownItemTextSelected,
+                        ]}>
                         {option.label}
                       </Text>
                       {selectedViolation === option.id && (
@@ -123,56 +123,46 @@ export default function ReportModal({ visible, onClose, onSubmit }: ReportModalP
               )}
             </View>
 
-            <ScrollView 
-              style={[styles.scrollableContent, { maxHeight: showDropdown ? 200 : 400 }]} 
+            <ScrollView
+              style={[styles.scrollableContent, { maxHeight: showDropdown ? 200 : 400 }]}
               showsVerticalScrollIndicator={false}
-              nestedScrollEnabled={true}
-            >
-
-            {/* Comment Section */}
-            <View style={styles.commentSection}>
-              <Text style={styles.sectionLabel}>
-                Describe the issue in detail *
-              </Text>
-              <TextInput
-                style={styles.commentInput}
-                placeholder="Please provide specific details about what happened during your ride..."
-                placeholderTextColor={theme.colors.gray[400]}
-                value={comment}
-                onChangeText={setComment}
-                multiline
-                numberOfLines={6}
-                maxLength={1000}
-                textAlignVertical="top"
-              />
-              <Text style={styles.characterCount}>
-                {comment.length}/1000
-              </Text>
-            </View>            <View style={styles.infoBox}>
-              <Feather name="info" size={16} color={theme.colors.primary[600]} />
-              <Text style={styles.infoText}>
-                Your report will be reviewed within 24-48 hours. You'll receive a ticket number for tracking.
-              </Text>
-            </View>
+              nestedScrollEnabled={true}>
+              <View style={styles.commentSection}>
+                <Text style={styles.sectionLabel}>Describe the issue in detail *</Text>
+                <TextInput
+                  style={styles.commentInput}
+                  placeholder="Please provide specific details about what happened during your ride..."
+                  placeholderTextColor={theme.colors.gray[400]}
+                  value={comment}
+                  onChangeText={setComment}
+                  multiline
+                  numberOfLines={6}
+                  maxLength={1000}
+                  textAlignVertical="top"
+                />
+                <Text style={styles.characterCount}>{comment.length}/1000</Text>
+              </View>{' '}
+              <View style={styles.infoBox}>
+                <Feather name="info" size={16} color={theme.colors.primary[600]} />{' '}
+                <Text style={styles.infoText}>
+                  Your report will be reviewed within 24-48 hours. You&apos;ll receive a ticket
+                  number for tracking.
+                </Text>
+              </View>
             </ScrollView>
           </View>
-
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.cancelButton}
-              onPress={onClose}
-            >
+            <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
               <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={[
                 styles.submitButton,
-                { opacity: (selectedViolation && comment.trim()) ? 1 : 0.5 }
+                { opacity: selectedViolation && comment.trim() ? 1 : 0.5 },
               ]}
               onPress={handleSubmit}
-              disabled={!selectedViolation || !comment.trim()}
-            >
+              disabled={!selectedViolation || !comment.trim()}>
               <Text style={styles.submitButtonText}>Submit</Text>
             </TouchableOpacity>
           </View>
@@ -189,7 +179,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-  },  modalContainer: {
+  },
+  modalContainer: {
     backgroundColor: theme.colors.white,
     borderRadius: 16,
     padding: 24,
@@ -226,7 +217,8 @@ const styles = StyleSheet.create({
     color: theme.colors.gray[600],
     marginBottom: 24,
     lineHeight: 22,
-  },  content: {
+  },
+  content: {
     flex: 1,
   },
   scrollableContent: {
@@ -253,7 +245,8 @@ const styles = StyleSheet.create({
   dropdownButtonText: {
     fontFamily: theme.typography.fontFamily.secondary.regular,
     fontSize: theme.typography.fontSize.md,
-  },  dropdownList: {
+  },
+  dropdownList: {
     backgroundColor: theme.colors.white,
     borderWidth: 1,
     borderColor: theme.colors.gray[300],

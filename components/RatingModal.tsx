@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Pressable,
-} from 'react-native';
+import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { theme } from '../utils/theme';
 
@@ -20,10 +12,8 @@ interface RatingModalProps {
 export default function RatingModal({ visible, onClose, onSubmit }: RatingModalProps) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
-
   const handleSubmit = () => {
     onSubmit(rating, comment);
-    // Reset state
     setRating(0);
     setComment('');
   };
@@ -31,17 +21,9 @@ export default function RatingModal({ visible, onClose, onSubmit }: RatingModalP
   const renderStar = (index: number) => {
     const isSelected = index <= rating;
     return (
-      <TouchableOpacity
-        key={index}
-        onPress={() => setRating(index)}
-        style={styles.starContainer}
-      >
-        <Feather
-          name="star"
-          size={32}
-          color={isSelected ? '#FFD700' : '#E0E0E0'}
-          style={isSelected ? styles.starFilled : styles.starEmpty}
-        />
+      <TouchableOpacity key={index} onPress={() => setRating(index)} style={styles.starContainer}>
+        {' '}
+        <Feather name="star" size={32} color={isSelected ? '#FFD700' : '#E0E0E0'} />
       </TouchableOpacity>
     );
   };
@@ -52,7 +34,7 @@ export default function RatingModal({ visible, onClose, onSubmit }: RatingModalP
       transparent
       animationType="fade"
       onRequestClose={onClose}
-    >
+      statusBarTranslucent>
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
           <View style={styles.header}>
@@ -62,9 +44,7 @@ export default function RatingModal({ visible, onClose, onSubmit }: RatingModalP
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.subtitle}>
-            How was your experience with this tricycle ride?
-          </Text>
+          <Text style={styles.subtitle}>How was your experience with this tricycle ride?</Text>
 
           <View style={styles.starsContainer}>
             {[1, 2, 3, 4, 5].map((index) => renderStar(index))}
@@ -80,9 +60,7 @@ export default function RatingModal({ visible, onClose, onSubmit }: RatingModalP
           </Text>
 
           <View style={styles.commentSection}>
-            <Text style={styles.commentLabel}>
-              Add a comment (optional)
-            </Text>
+            <Text style={styles.commentLabel}>Add a comment (optional)</Text>
             <TextInput
               style={styles.commentInput}
               placeholder="Share your feedback about the ride..."
@@ -93,27 +71,18 @@ export default function RatingModal({ visible, onClose, onSubmit }: RatingModalP
               numberOfLines={4}
               maxLength={500}
             />
-            <Text style={styles.characterCount}>
-              {comment.length}/500
-            </Text>
+            <Text style={styles.characterCount}>{comment.length}/500</Text>
           </View>
 
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.cancelButton}
-              onPress={onClose}
-            >
+            <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
               <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
-              style={[
-                styles.submitButton,
-                { opacity: rating === 0 ? 0.5 : 1 }
-              ]}
+              style={[styles.submitButton, { opacity: rating === 0 ? 0.5 : 1 }]}
               onPress={handleSubmit}
-              disabled={rating === 0}
-            >
+              disabled={rating === 0}>
               <Text style={styles.submitButtonText}>Submit</Text>
             </TouchableOpacity>
           </View>
@@ -176,12 +145,6 @@ const styles = StyleSheet.create({
   },
   starContainer: {
     padding: 4,
-  },
-  starFilled: {
-    // Additional styling for filled stars if needed
-  },
-  starEmpty: {
-    // Additional styling for empty stars if needed
   },
   ratingText: {
     fontFamily: theme.typography.fontFamily.primary.medium,

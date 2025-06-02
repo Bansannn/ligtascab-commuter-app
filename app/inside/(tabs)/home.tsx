@@ -1,6 +1,6 @@
 import { Link } from 'expo-router';
 import { Text, View, StyleSheet } from 'react-native';
-import { theme } from '../../../utils/theme'; // Adjust path as needed
+import { theme } from '../../../utils/theme';
 
 export default function Index() {
   return (
@@ -40,9 +40,9 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primary[600],
     paddingVertical: 12,
     paddingHorizontal: 30,
-    borderRadius: 25, // Make it more pill-shaped
-    elevation: 3, // Add a slight shadow for Android
-    shadowColor: '#000', // Shadow for iOS
+    borderRadius: 25,
+    elevation: 3,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 2,

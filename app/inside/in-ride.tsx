@@ -14,7 +14,7 @@ import InRideOptions from '~/components/InRideOptions';
 import TricycleDetailsCard from '~/components/TricycleDetailsCard';
 import { fetchTricycleDetails } from '~/services/tricycles';
 import { Tricycle } from '~/types/types';
-import { theme } from '../../utils/theme'; // Import theme
+import { theme } from '../../utils/theme';
 
 export default function InRidePage() {
   const { tricycle_id } = useLocalSearchParams<{ tricycle_id: string }>();
@@ -57,7 +57,9 @@ export default function InRidePage() {
               <Image style={styles.image} source={require('~/assets/sample-tricycle.png')} />
             </View>
             <View style={{ flexDirection: 'column', width: '100%', gap: 15 }}>
-              <TricycleDetailsCard title="Plate Number" name={tricycle?.plate_number.toString() ?? ''}>
+              <TricycleDetailsCard
+                title="Plate Number"
+                name={tricycle?.plate_number.toString() ?? ''}>
                 <MaterialIcons name="numbers" size={22} color={theme.colors.primary[600]} />
               </TricycleDetailsCard>
               <TricycleDetailsCard
@@ -68,13 +70,19 @@ export default function InRidePage() {
               <TricycleDetailsCard
                 title="Franchise Number"
                 name={tricycle?.compliance_details.franchise_number.toString() ?? ''}>
-                <MaterialCommunityIcons name="file-document-outline" size={22} color={theme.colors.primary[600]} />
+                <MaterialCommunityIcons
+                  name="file-document-outline"
+                  size={22}
+                  color={theme.colors.primary[600]}
+                />
               </TricycleDetailsCard>
             </View>
           </View>
           <View style={styles.routeContainer}>
             <FontAwesome5 name="route" size={23} color={theme.colors.primary[600]} />
-            <View style={styles.routeInfoContainer}> {/* Added a style for this container */}
+            <View style={styles.routeInfoContainer}>
+              {' '}
+              {/* Added a style for this container */}
               <Text style={styles.routeTitleText}>Routes</Text>
               <View style={styles.routeList}>
                 <Text style={styles.routeItemText}>Centro</Text>
@@ -157,12 +165,14 @@ const styles = StyleSheet.create({
     paddingVertical: 16, // Adjusted padding
     gap: 16, // Gap between icon and text block
   },
-  routeInfoContainer: { // New style for the text block next to the icon
+  routeInfoContainer: {
+    // New style for the text block next to the icon
     flex: 1, // Allow it to take available space
     flexDirection: 'column',
     gap: 8, // Gap between title and each route list
   },
-  routeTitleText: { // Style for the "Routes" title
+  routeTitleText: {
+    // Style for the "Routes" title
     fontFamily: theme.typography.fontFamily.primary.semiBold,
     fontSize: theme.typography.fontSize.lg,
     color: theme.colors.gray[800],
@@ -174,7 +184,8 @@ const styles = StyleSheet.create({
     gap: 8, // Gap between texts and icon in a route
     // marginBottom: 4, // Optional: if you want more space between each route line
   },
-  routeItemText: { // Style for individual route points like "Centro"
+  routeItemText: {
+    // Style for individual route points like "Centro"
     fontFamily: theme.typography.fontFamily.secondary.regular,
     fontSize: theme.typography.fontSize.md,
     color: theme.colors.gray[700],
