@@ -14,6 +14,7 @@ import InRideOptions from '~/components/InRideOptions';
 import TricycleDetailsCard from '~/components/TricycleDetailsCard';
 import { fetchTricycleDetails } from '~/services/tricycles';
 import { Tricycle } from '~/types/types';
+import { theme } from '../../utils/theme'; // Import theme
 
 export default function InRidePage() {
   const { tricycle_id } = useLocalSearchParams<{ tricycle_id: string }>();
@@ -56,39 +57,39 @@ export default function InRidePage() {
               <Image style={styles.image} source={require('~/assets/sample-tricycle.png')} />
             </View>
             <View style={{ flexDirection: 'column', width: '100%', gap: 15 }}>
-              <TricycleDetailsCard title="Plate Number" name={tricycle?.plate_number ?? ''}>
-                <MaterialIcons name="numbers" size={22} color="black" />
+              <TricycleDetailsCard title="Plate Number" name={tricycle?.plate_number.toString() ?? ''}>
+                <MaterialIcons name="numbers" size={22} color={theme.colors.primary[600]} />
               </TricycleDetailsCard>
               <TricycleDetailsCard
                 title="Seating Capacity"
-                name={tricycle?.tricycle_details.seating_capacity ?? ''}>
-                <Feather name="users" size={22} color="black" />
+                name={tricycle?.tricycle_details.seating_capacity?.toString() ?? ''}>
+                <Feather name="users" size={22} color={theme.colors.primary[600]} />
               </TricycleDetailsCard>
               <TricycleDetailsCard
                 title="Franchise Number"
-                name={tricycle?.compliance_details.franchise_number ?? ''}>
-                <MaterialCommunityIcons name="file-document-outline" size={22} color="black" />
+                name={tricycle?.compliance_details.franchise_number.toString() ?? ''}>
+                <MaterialCommunityIcons name="file-document-outline" size={22} color={theme.colors.primary[600]} />
               </TricycleDetailsCard>
             </View>
           </View>
           <View style={styles.routeContainer}>
-            <FontAwesome5 name="route" size={32} color="black" />
-            <View>
-              <Text style={{ color: '#868e96', fontSize: 12 }}>Routes</Text>
+            <FontAwesome5 name="route" size={23} color={theme.colors.primary[600]} />
+            <View style={styles.routeInfoContainer}> {/* Added a style for this container */}
+              <Text style={styles.routeTitleText}>Routes</Text>
               <View style={styles.routeList}>
-                <Text>Centro</Text>
-                <Octicons name="arrow-switch" size={18} color="black" />
-                <Text>Panganiban</Text>
+                <Text style={styles.routeItemText}>Centro</Text>
+                <Octicons name="arrow-switch" size={18} color={theme.colors.gray[600]} />
+                <Text style={styles.routeItemText}>Panganiban</Text>
               </View>
               <View style={styles.routeList}>
-                <Text>Centro</Text>
-                <Octicons name="arrow-switch" size={18} color="black" />
-                <Text>Penafrancia</Text>
+                <Text style={styles.routeItemText}>Centro</Text>
+                <Octicons name="arrow-switch" size={18} color={theme.colors.gray[600]} />
+                <Text style={styles.routeItemText}>Penafrancia</Text>
               </View>
               <View style={styles.routeList}>
-                <Text>Centro</Text>
-                <Octicons name="arrow-switch" size={18} color="black" />
-                <Text>Conception Pequena</Text>
+                <Text style={styles.routeItemText}>Centro</Text>
+                <Octicons name="arrow-switch" size={18} color={theme.colors.gray[600]} />
+                <Text style={styles.routeItemText}>Conception Pequena</Text>
               </View>
             </View>
           </View>
@@ -109,13 +110,14 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     width: '90%',
-    height: '50%',
+    height: '58%',
     backgroundColor: '#1daa88',
     borderRadius: 12,
     padding: 16,
     gap: 12,
   },
   cardHeader: {
+    fontFamily: theme.typography.fontFamily.primary.bold,
     fontSize: 24,
     fontWeight: 600,
     color: '#ffffff',
@@ -146,16 +148,35 @@ const styles = StyleSheet.create({
   },
   routeContainer: {
     width: '100%',
-    backgroundColor: '#ffffff',
+    backgroundColor: theme.colors.white,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    // justifyContent: 'space-between', // Let the inner container handle spacing
+    alignItems: 'flex-start', // Align icon to the top of the text content
     borderRadius: 8,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
+    paddingHorizontal: 16, // Adjusted padding
+    paddingVertical: 16, // Adjusted padding
+    gap: 16, // Gap between icon and text block
+  },
+  routeInfoContainer: { // New style for the text block next to the icon
+    flex: 1, // Allow it to take available space
+    flexDirection: 'column',
+    gap: 8, // Gap between title and each route list
+  },
+  routeTitleText: { // Style for the "Routes" title
+    fontFamily: theme.typography.fontFamily.primary.semiBold,
+    fontSize: theme.typography.fontSize.lg,
+    color: theme.colors.gray[800],
+    marginBottom: 4, // Small space below the title
   },
   routeList: {
     flexDirection: 'row',
-    gap: 12,
+    alignItems: 'center', // Vertically align text and icon in a route
+    gap: 8, // Gap between texts and icon in a route
+    // marginBottom: 4, // Optional: if you want more space between each route line
+  },
+  routeItemText: { // Style for individual route points like "Centro"
+    fontFamily: theme.typography.fontFamily.secondary.regular,
+    fontSize: theme.typography.fontSize.md,
+    color: theme.colors.gray[700],
   },
 });

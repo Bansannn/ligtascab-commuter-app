@@ -1,5 +1,6 @@
 import { Feather } from '@expo/vector-icons';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { theme } from '../utils/theme'; // Import theme
 
 type ScanModalErrorProps = {
   visible: boolean;
@@ -16,9 +17,14 @@ export default function ScanModalError({
     <Modal visible={visible} transparent animationType="none">
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
+          <Feather
+            name="alert-triangle"
+            size={32}
+            color={theme.colors.danger}
+          />
           <Text style={styles.errorText}>{scanError}</Text>
-          <Pressable onPress={exitModalHandler}>
-            <Feather name="x" size={24} color="black" />
+          <Pressable onPress={exitModalHandler} style={styles.closeButton}>
+            <Feather name="x" size={24} color={theme.colors.gray[700]} />
           </Pressable>
         </View>
       </View>
@@ -31,20 +37,34 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    backgroundColor: 'rgba(0,0,0,0.4)', // Keep semi-transparent overlay
   },
   modalContent: {
-    height: '10%',
     width: '90%',
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    justifyContent: 'center',
+    maxWidth: 380, // Max width for larger screens
+    backgroundColor: theme.colors.white,
+    padding: 20,
+    borderRadius: 20, // Softer corners
     alignItems: 'center',
-    borderRadius: 16,
-    gap: 16,
+    gap: 15, // Space between icon, text, and button
+    elevation: 10,
+    shadowColor: theme.colors.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    position: 'relative', // For absolute positioning of close button
   },
   errorText: {
-    fontSize: 16,
-    color: '#fa5252',
+    fontFamily: theme.typography.fontFamily.primary.medium,
+    fontSize: theme.typography.fontSize.lg, // Slightly larger error text
+    color: theme.colors.danger,
+    textAlign: 'center',
+    fontWeight: '500',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    padding: 5, // Add some padding for easier pressing
   },
 });

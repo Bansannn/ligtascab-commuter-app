@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { theme } from '../../utils/theme'; // Import theme
 
 const queryClient = new QueryClient();
 
@@ -14,10 +15,14 @@ export default function InsideLayout() {
             headerTransparent: true,
             headerBackVisible: false,
             headerStyle: {
-              backgroundColor: '#ffffff',
+              backgroundColor: theme.colors.white, // Use theme color
             },
             headerTitle: 'ligtascab.',
-            headerTitleStyle: { color: '#1daa88', fontWeight: '700', fontSize: 24 },
+            headerTitleStyle: {
+              fontFamily: theme.typography.fontFamily.primary.bold, // Use theme font
+              color: theme.colors.primary[600], // Use theme color
+              fontSize: 24,
+            },
           }}
         />
       </Stack>

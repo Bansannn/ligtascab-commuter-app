@@ -8,6 +8,7 @@ import ScanModalContent from '~/components/ScanModalContent';
 import ScanModalError from '~/components/ScanModalError';
 import { fetchTricycleDetails } from '~/services/tricycles';
 import { Tricycle } from '~/types/types';
+import { theme } from '../../../utils/theme';
 
 export default function Scan() {
   //Camera States
@@ -67,7 +68,7 @@ export default function Scan() {
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <View style={styles.cardIconContainer}>
-              <AntDesign name="qrcode" size={42} color="#1daa88" />
+              <AntDesign name="qrcode" size={42} color={theme.colors.primary[600]} />
             </View>
           </View>
           <Text style={styles.cardTitle}>Scan the QR Code</Text>
@@ -87,16 +88,13 @@ export default function Scan() {
             />
             <View style={styles.buttonContainer}>
               <TouchableOpacity onPress={toggleCameraFacing}>
-                <FontAwesome6 name="camera-rotate" size={24} color="#ffffff" />
+                <FontAwesome6 name="camera-rotate" size={24} color={theme.colors.white} />
               </TouchableOpacity>
             </View>
           </View>
           <Text style={styles.cardDescription}>
             Scan the QR to get your tricycle&apos;s details and to start and confirm your ride.
           </Text>
-          <Pressable style={styles.cardButton} disabled={true}>
-            <Text style={styles.buttonText}>Start Ride</Text>
-          </Pressable>
         </View>
       </View>
       {scanError !== null && (
@@ -122,19 +120,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'center', // Center the card vertically for a more balanced look
+    backgroundColor: theme.colors.gray[100], // Added a light background to the screen
   },
   card: {
     position: 'relative',
-    height: '90%',
-    width: '100%',
-    backgroundColor: '#1daa88',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    // height: '90%', // Remove fixed height, let content define it
+    width: '90%', // Make card slightly less wide
+    maxWidth: 400, // Add a max width for larger screens
+    backgroundColor: theme.colors.primary[600],
+    borderRadius: 20, // Increased border radius for a softer look
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 36,
-    gap: 16,
+    // justifyContent: 'center', // Remove to allow natural flow from top
+    padding: 24, // Unified padding
+    gap: 20, // Increased gap between elements
+    elevation: 5, // Add some shadow for depth
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   cardHeader: {
     position: 'absolute',
@@ -143,40 +147,46 @@ const styles = StyleSheet.create({
     width: 72,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#ffffff',
-    borderRadius: '50%',
+    backgroundColor: theme.colors.white,
+    borderRadius: 36,
   },
   cardIconContainer: {
     height: 62,
     width: 62,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: '50%',
-    borderColor: '#1daa88',
+    borderRadius: 31,
+    borderColor: theme.colors.primary[600],
     borderWidth: 4,
   },
   cardTitle: {
-    fontSize: 28,
-    fontWeight: 700,
-    color: '#ffffff',
+    fontFamily: theme.typography.fontFamily.primary.bold,
+    fontSize: theme.typography.fontSize['2xl'], // Slightly smaller title for balance
+    fontWeight: '700',
+    color: theme.colors.white,
+    marginTop: 36, // Add margin to account for the overlapping header
   },
   cardDescription: {
     textAlign: 'center',
-    fontSize: 16,
-    color: '#ffffff',
+    fontFamily: theme.typography.fontFamily.secondary.regular,
+    fontSize: theme.typography.fontSize.md,
+    color: theme.colors.gray[100], // Lighter text for description
+    paddingHorizontal: 10, // Add some horizontal padding for readability
   },
   cardButton: {
     width: '100%',
-    backgroundColor: '#ffffff',
+    backgroundColor: theme.colors.white,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 16,
-    borderRadius: 16,
+    paddingVertical: 14, // Adjusted padding
+    paddingHorizontal: 16,
+    borderRadius: 25, // Pill-shaped button
   },
   buttonText: {
-    fontSize: 16,
-    fontWeight: 700,
-    color: '#1daa88',
+    fontFamily: theme.typography.fontFamily.primary.bold,
+    fontSize: theme.typography.fontSize.md,
+    fontWeight: '700',
+    color: theme.colors.primary[600],
   },
   camera: {
     flex: 1,
@@ -184,10 +194,12 @@ const styles = StyleSheet.create({
   cameraContainer: {
     position: 'relative',
     width: '100%',
-    height: '50%',
+    aspectRatio: 1, // Make it a square
+    // height: '50%', // Remove fixed height, use aspectRatio
     justifyContent: 'center',
-    borderWidth: 8,
-    borderColor: '#ffffff',
+    borderWidth: 6, // Slightly thinner border
+    borderColor: theme.colors.white,
+    borderRadius: 10, // Add some radius to camera view
     overflow: 'hidden',
   },
   buttonContainer: {

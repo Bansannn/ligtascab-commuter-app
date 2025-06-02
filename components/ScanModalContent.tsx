@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Tricycle } from '~/types/types';
 import { formatDate } from '~/utils/utils';
+import { theme } from '../utils/theme';
 
 type ScanModalContentProps = {
   visible: boolean;
@@ -27,28 +28,28 @@ export default function ScanModalContent({
             <View style={styles.modalTricycleCard}>
               <Text style={styles.tricycleCardHeader}>Confirm Tricycle</Text>
               <View style={styles.tricycleCardContent}>
-                <Text style={styles.tricycleCardDescription}>Are the details correct?</Text>
                 <View style={styles.tricycleDetailsContainer}>
                   <View>
-                    <Text style={styles.tricycleDetailsTitle}>{tricycle.plate_number}</Text>
                     <Text style={styles.tricycleCardDescription}>Plate Number</Text>
+                    <Text style={styles.tricycleDetailsTitle}>{tricycle.plate_number}</Text>
                   </View>
                   <View>
+                    <Text style={styles.tricycleCardDescription}>Registration Expiration</Text>
                     <Text style={styles.tricycleDetailsTitle}>
                       {formatDate(tricycle.registration_expiration.toLocaleString())}
                     </Text>
-                    <Text style={styles.tricycleCardDescription}>Registration Expiration</Text>
                   </View>
                 </View>
               </View>
+                <Text style={styles.tricycleCardDescription}>Are the details correct?</Text>
               <View style={styles.tricycleCardButtonContainer}>
                 <Pressable
-                  style={[styles.tricycleCardButton, { backgroundColor: '#dee2e6' }]}
+                  style={[styles.tricycleCardButton, styles.noButton]}
                   onPress={exitModalHandler}>
-                  <Text>No</Text>
+                  <Text style={styles.noButtonText}>No</Text>
                 </Pressable>
                 <Pressable
-                  style={[styles.tricycleCardButton, { backgroundColor: '#1daa88' }]}
+                  style={[styles.tricycleCardButton, styles.yesButton]}
                   onPress={() => {
                     exitModalHandler();
                     router.push({
@@ -56,7 +57,7 @@ export default function ScanModalContent({
                       params: { tricycle_id: tricycle.id },
                     });
                   }}>
-                  <Text style={{ color: '#ffffff' }}>Yes</Text>
+                  <Text style={styles.yesButtonText}>Yes</Text>
                 </Pressable>
               </View>
             </View>
@@ -69,56 +70,93 @@ export default function ScanModalContent({
 
 const styles = StyleSheet.create({
   modalTricycleCard: {
-    height: '100%',
-    paddingVertical: 24,
+    width: '100%',
+    paddingVertical: 20,
+    paddingHorizontal: 10,
     justifyContent: 'space-between',
-  },
-  tricycleCardHeader: {
-    fontSize: 28,
-    fontWeight: 700,
+    alignItems: 'center',
+    gap: 15,
+  },  tricycleCardHeader: {
+    fontFamily: theme.typography.fontFamily.primary.bold,
+    fontSize: theme.typography.fontSize['2xl'],
+    color: theme.colors.gray[900],
+    textAlign: 'center',
   },
   tricycleCardContent: {
     flexDirection: 'column',
-    gap: 12,
+  
+    width: '100%',
+    alignItems: 'center',
   },
   tricycleCardDescription: {
-    fontSize: 16,
+    fontFamily: theme.typography.fontFamily.secondary.regular,
+    fontSize: theme.typography.fontSize.md,
+    color: theme.colors.gray[700],
+    textAlign: 'center',
   },
   tricycleCardButtonContainer: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-    gap: 8,
+    justifyContent: 'space-around',
+    gap: 12,
   },
   tricycleCardButton: {
-    width: 52,
+    flex: 1,
     alignItems: 'center',
-    borderRadius: 16,
-    padding: 8,
+    borderRadius: 25,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+  },
+  noButton: {
+    backgroundColor: theme.colors.gray[200],
+  },  noButtonText: {
+    fontFamily: theme.typography.fontFamily.primary.medium,
+    fontSize: theme.typography.fontSize.md,
+    color: theme.colors.gray[800],
+  },
+  yesButton: {
+    backgroundColor: theme.colors.primary[600],
+  },  yesButtonText: {
+    fontFamily: theme.typography.fontFamily.primary.semiBold,
+    fontSize: theme.typography.fontSize.md,
+    color: theme.colors.white,
   },
   tricycleDetailsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  tricycleDetailsTitle: {
-    fontSize: 28,
-    fontWeight: 700,
+    flexDirection: 'column', // Changed from 'row' to 'column'
+    alignItems: 'center', // Center items in column
+    gap: 10, // Add some gap between the two detail sections
+    width: '100%',
+    marginTop: 10,
+  },  tricycleDetailsTitle: {
+    fontFamily: theme.typography.fontFamily.primary.bold,
+    fontSize: theme.typography.fontSize['3xl'],
+    color: theme.colors.primary[600],
+    textAlign: 'center',
   },
   modalOverlay: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    backgroundColor: 'rgba(0,0,0,0.4)',
   },
   modalContent: {
-    position: 'relative',
-    height: '30%',
+    minHeight: 280,
     width: '90%',
-    backgroundColor: 'white',
-    display: 'flex',
+    maxWidth: 380,
+    backgroundColor: theme.colors.white,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 16,
-    paddingHorizontal: 24,
+    borderRadius: 20,
+    padding: 20,
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
   },
 });

@@ -1,19 +1,25 @@
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
+import { theme } from '../../../utils/theme'; // Import theme
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#1daa88',
+          backgroundColor: theme.colors.primary[600], // Use theme color
           borderBottomLeftRadius: 16,
           borderBottomRightRadius: 16,
           height: 95,
         },
         headerTitle: 'ligtascab.',
-        headerTitleStyle: { color: '#ffffff', fontWeight: '700', fontSize: 24 },
-        tabBarActiveTintColor: '#1daa88',
+        headerTitleStyle: {
+          fontFamily: theme.typography.fontFamily.primary.bold, // Use theme font
+          color: theme.colors.white, // Use theme color
+          fontSize: 24,
+        },
+        tabBarActiveTintColor: theme.colors.primary[600], // Use theme color
+        tabBarInactiveTintColor: theme.colors.gray[500], // Add inactive color
       }}>
       <Tabs.Screen
         name="home"

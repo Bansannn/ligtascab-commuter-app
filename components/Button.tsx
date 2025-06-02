@@ -1,5 +1,6 @@
 import { forwardRef } from 'react';
 import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
+import { theme } from '../utils/theme';
 
 type ButtonProps = {
   title?: string;
@@ -18,7 +19,7 @@ Button.displayName = 'Button';
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
-    backgroundColor: '#6366F1',
+    backgroundColor: theme.colors.primary[600],
     borderRadius: 24,
     elevation: 5,
     flexDirection: 'row',
@@ -31,11 +32,11 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
+  },  buttonText: {
+    color: theme.colors.white,
+    fontFamily: theme.typography.fontFamily.primary.semiBold,
+    fontSize: theme.typography.fontSize.md,
+    fontWeight: '600', // Using string literal instead of theme value
     textAlign: 'center',
   },
 });
