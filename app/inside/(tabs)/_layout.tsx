@@ -1,4 +1,4 @@
-import { Feather, MaterialIcons } from '@expo/vector-icons';
+import { Feather, FontAwesome5, MaterialIcons,  } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { theme } from '../../../utils/theme';
 
@@ -25,7 +25,7 @@ export default function TabLayout() {
         name="home"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <Feather name="home" size={24} color={color} />,
+          tabBarIcon: ({ color }) => <MaterialIcons name="home-filled" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
@@ -35,6 +35,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <MaterialIcons name="qr-code" size={24} color={color} />,
         }}
       />
-    </Tabs>
+      <Tabs.Screen
+        name="history"
+        options={{
+          title: 'History',
+          tabBarIcon: ({ color }) => <MaterialIcons name="history" size={24} color={color} />,
+        }}
+      /> </Tabs>
+
   );
 }
