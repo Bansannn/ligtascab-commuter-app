@@ -1,193 +1,315 @@
-import {
-  AntDesign,
-  Feather,
-  FontAwesome5,
-  MaterialCommunityIcons,
-  MaterialIcons,
-  Octicons,
-} from '@expo/vector-icons';
-import { useQuery } from '@tanstack/react-query';
+import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
-import { useLocalSearchParams } from 'expo-router';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import InRideOptions from '~/components/InRideOptions';
-import TricycleDetailsCard from '~/components/TricycleDetailsCard';
-import { fetchTricycleDetails } from '~/services/tricycles';
+import PersonnelRatingModal, { Personnel } from '~/components/PersonnelRatingModal';
 import { Tricycle } from '~/types/types';
 import { theme } from '../../utils/theme';
 
 export default function InRidePage() {
-  const { tricycle_id } = useLocalSearchParams<{ tricycle_id: string }>();
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedPersonnel, setSelectedPersonnel] = useState<Personnel | null>(null);
 
-  const { data: tricycle, isLoading } = useQuery<Tricycle | null>({
-    queryKey: ['tricycle-details', tricycle_id],
-    queryFn: async () => {
-      const { data } = await fetchTricycleDetails(tricycle_id);
-      return data;
+  const driver: Personnel = {
+    name: 'Walt Haughfin',
+    role: 'Driver',
+    rating: 4.8,
+    comments: [
+      { id: 'c1', text: 'Very polite and drove safely.', author: 'Jane D.' },
+      { id: 'c2', text: 'Knew a shortcut that saved time.', author: 'John S.' },
+      { id: 'c3', text: 'Clean tricycle, friendly driver.', author: 'Emily R.' },
+    ],
+  };
+
+  const operator: Personnel = {
+    name: 'Bella Wright',
+    role: 'Operator',
+    rating: 4.5,
+    comments: [{ id: 'c4', text: 'Helpful when I called for a lost item.', author: 'Mike T.' }],
+  };
+
+  const tricycle: Tricycle = {
+    id: 'MOCK-ID-001',
+    plate_number: 'MCP-1234',
+    operator_id: 'OP-001',
+    status: 'Active',
+    registration_expiration: new Date('2025-12-31'),
+    franchise_expiration: new Date('2026-12-31'),
+    last_maintenance_date: new Date('2025-06-01'),
+    tricycle_details: {
+      model: 'TVS King',
+      year: '2022',
+      seating_capacity: '4',
+      body_color: 'Silver',
+      fuel_type: 'Gasoline',
+      mileage: '15000',
+      maintenance_status: 'Good',
     },
-    retry: false,
-  });
+    compliance_details: {
+      registration_number: 'REG-91011',
+      franchise_number: '0423',
+      or_number: 'OR-151617',
+      cr_number: 'CR-181920',
+    },
+  };
 
-  // if (!tricycle) return null;
+  const openModal = (personnel: Personnel) => {
+    setSelectedPersonnel(personnel);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedPersonnel(null);
+  };
 
   return (
-    <View style={styles.container}>
-      {isLoading ? (
-        <ActivityIndicator />
-      ) : (
-        <View style={styles.cardContainer}>
-          <View>
-            <Text style={styles.cardHeader}>Tricycle&apos;s Information</Text>
-            <Text style={{ color: '#dee2e6' }}>Ride ID: 01239123582343</Text>
+    <View style={styles.pageContainer}>
+      <Image style={styles.headerImage} source={require('~/assets/sample-tricycle.png')} />
+
+      <ScrollView
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.scrollContentContainer}
+        showsVerticalScrollIndicator={false}>
+        <View style={styles.contentSheet}>
+          {/* Header */}
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>Tricycle Details</Text>
+            <Text style={styles.rideId}>Ride ID: 01239123582343</Text>
           </View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <TricycleDetailsCard title="Driver" name="Walt Haughfin">
+
+          {/* Key Details */}
+          <View style={styles.keyDetailsContainer}>
+            <View style={styles.keyDetailItem}>
+              <MaterialIcons name="numbers" size={24} color={theme.colors.primary[600]} />
+              <Text style={styles.keyDetailValue}>{tricycle.plate_number}</Text>
+              <Text style={styles.keyDetailLabel}>Plate Number</Text>
+            </View>
+            <View style={styles.keyDetailItem}>
+              <MaterialCommunityIcons
+                name="file-document-outline"
+                size={24}
+                color={theme.colors.primary[600]}
+              />
+              <Text style={styles.keyDetailValue}>
+                {tricycle.compliance_details.franchise_number}
+              </Text>
+              <Text style={styles.keyDetailLabel}>Franchise No.</Text>
+            </View>
+            <View style={styles.keyDetailItem}>
+              <MaterialIcons name="color-lens" size={24} color={theme.colors.primary[600]} />
+              <Text style={styles.keyDetailValue}>{tricycle.tricycle_details.body_color}</Text>
+              <Text style={styles.keyDetailLabel}>Body Color</Text>
+            </View>
+          </View>
+
+          {/* Personnel Section */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <FontAwesome5 name="user-cog" size={18} color={theme.colors.gray[100]} />
+              <Text style={styles.sectionTitle}>Driver & Operator</Text>
+            </View>
+            <TouchableOpacity style={styles.personnelItem} onPress={() => openModal(driver)}>
               <View style={styles.avatar}>
-                <AntDesign name="user" size={24} color="black" />
+                <AntDesign name="user" size={24} color={theme.colors.gray[800]} />
               </View>
-            </TricycleDetailsCard>
-            <TricycleDetailsCard title="Operator" name="Bella Wright">
+              <View style={styles.personnelInfo}>
+                <Text style={styles.personnelName}>{driver.name}</Text>
+                <Text style={styles.personnelRole}>{driver.role}</Text>
+              </View>
+              <View style={styles.ratingContainer}>
+                <AntDesign name="star" size={16} color={theme.colors.gray[700]} />
+                <Text style={styles.ratingText}>{driver.rating.toFixed(1)}</Text>
+              </View>
+              <AntDesign name="right" size={16} color={theme.colors.gray[400]} />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.personnelItem} onPress={() => openModal(operator)}>
               <View style={styles.avatar}>
-                <AntDesign name="user" size={24} color="black" />
+                <AntDesign name="user" size={24} color={theme.colors.gray[800]} />
               </View>
-            </TricycleDetailsCard>
+              <View style={styles.personnelInfo}>
+                <Text style={styles.personnelName}>{operator.name}</Text>
+                <Text style={styles.personnelRole}>{operator.role}</Text>
+              </View>
+              <View style={styles.ratingContainer}>
+                <AntDesign name="star" size={16} color={theme.colors.gray[700]} />
+                <Text style={styles.ratingText}>{operator.rating.toFixed(1)}</Text>
+              </View>
+              <AntDesign name="right" size={16} color={theme.colors.gray[400]} />
+            </TouchableOpacity>
           </View>
-          <View style={styles.contentContainer}>
-            <View style={styles.imageContainer}>
-              <Image style={styles.image} source={require('~/assets/sample-tricycle.png')} />
+
+          {/* Routes Section */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <FontAwesome5 name="route" size={18} color={theme.colors.gray[100]} />
+              <Text style={styles.sectionTitle}>Approved Routes</Text>
             </View>
-            <View style={{ flexDirection: 'column', width: '100%', gap: 15 }}>
-              <TricycleDetailsCard
-                title="Plate Number"
-                name={tricycle?.plate_number.toString() ?? ''}>
-                <MaterialIcons name="numbers" size={22} color={theme.colors.primary[600]} />
-              </TricycleDetailsCard>
-              <TricycleDetailsCard
-                title="Seating Capacity"
-                name={tricycle?.tricycle_details.seating_capacity?.toString() ?? ''}>
-                <Feather name="users" size={22} color={theme.colors.primary[600]} />
-              </TricycleDetailsCard>
-              <TricycleDetailsCard
-                title="Franchise Number"
-                name={tricycle?.compliance_details.franchise_number.toString() ?? ''}>
-                <MaterialCommunityIcons
-                  name="file-document-outline"
-                  size={22}
-                  color={theme.colors.primary[600]}
-                />
-              </TricycleDetailsCard>
+            <View style={styles.routeTagsContainer}>
+              <Text style={styles.routeTag}>Centro ↔ Panganiban</Text>
+              <Text style={styles.routeTag}>Centro ↔ Penafrancia</Text>
+              <Text style={styles.routeTag}>Centro ↔ Conception Pequena</Text>
             </View>
           </View>
-          <View style={styles.routeContainer}>
-            <FontAwesome5 name="route" size={23} color={theme.colors.primary[600]} />
-            <View style={styles.routeInfoContainer}>
-              {' '}
-              {/* Added a style for this container */}
-              <Text style={styles.routeTitleText}>Routes</Text>
-              <View style={styles.routeList}>
-                <Text style={styles.routeItemText}>Centro</Text>
-                <Octicons name="arrow-switch" size={18} color={theme.colors.gray[600]} />
-                <Text style={styles.routeItemText}>Panganiban</Text>
-              </View>
-              <View style={styles.routeList}>
-                <Text style={styles.routeItemText}>Centro</Text>
-                <Octicons name="arrow-switch" size={18} color={theme.colors.gray[600]} />
-                <Text style={styles.routeItemText}>Penafrancia</Text>
-              </View>
-              <View style={styles.routeList}>
-                <Text style={styles.routeItemText}>Centro</Text>
-                <Octicons name="arrow-switch" size={18} color={theme.colors.gray[600]} />
-                <Text style={styles.routeItemText}>Conception Pequena</Text>
-              </View>
-            </View>
-          </View>
+          
         </View>
-      )}
-      {!isLoading && <InRideOptions />}
+
+        <View style={styles.floatingOptionsContainer}>
+          <InRideOptions />
+        </View>
+      </ScrollView>
+
+      <PersonnelRatingModal
+        visible={isModalVisible}
+        onClose={closeModal}
+        personnel={selectedPersonnel}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  pageContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ffffff',
-    gap: 16,
+    backgroundColor: theme.colors.primary[600],
   },
-  cardContainer: {
-    width: '90%',
-    height: '58%',
-    backgroundColor: '#1daa88',
-    borderRadius: 12,
+  headerImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 300,
+    width: '100%',
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  scrollContentContainer: {
+    paddingTop: 300, // Space for the header image
+    paddingBottom: 120, // Space for floating buttons
+  },
+  contentSheet: {
+    backgroundColor: theme.colors.primary[600],
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     padding: 16,
+    gap: 24,
+  },
+  header: {
+    paddingHorizontal: 8,
+  },
+  headerTitle: {
+    fontFamily: theme.typography.fontFamily.primary.bold,
+    fontSize: 28,
+    color: theme.colors.white,
+  },
+  rideId: {
+    fontFamily: theme.typography.fontFamily.secondary.regular,
+    fontSize: theme.typography.fontSize.sm,
+    color: theme.colors.white,
+  },
+  keyDetailsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: theme.colors.white,
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  keyDetailItem: {
+    alignItems: 'center',
+    gap: 8,
+  },
+  keyDetailValue: {
+    fontFamily: theme.typography.fontFamily.primary.bold,
+    fontSize: theme.typography.fontSize.lg,
+    color: theme.colors.gray[900],
+  },
+  keyDetailLabel: {
+    fontFamily: theme.typography.fontFamily.secondary.regular,
+    fontSize: theme.typography.fontSize.xs,
+    color: theme.colors.gray[600],
+  },
+  section: {
+    gap: 8,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingHorizontal: 8,
+  },
+  sectionTitle: {
+    fontFamily: theme.typography.fontFamily.primary.bold,
+    fontSize: theme.typography.fontSize.xl,
+    color: theme.colors.white,
+  },
+  personnelItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.colors.white,
+    padding: 12,
+    borderRadius: 12,
     gap: 12,
   },
-  cardHeader: {
-    fontFamily: theme.typography.fontFamily.primary.bold,
-    fontSize: 24,
-    fontWeight: 600,
-    color: '#ffffff',
-  },
-  imageContainer: {
-    width: 152,
-    height: 162,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: '#fff',
-  },
-  image: {
-    flex: 1,
-    width: '100%',
-    borderRadius: 8,
-  },
   avatar: {
-    height: 34,
-    width: 34,
-    backgroundColor: '#ced4da',
-    borderRadius: 16,
+    height: 48,
+    width: 48,
+    backgroundColor: theme.colors.gray[100],
+    borderWidth: 1,
+    borderColor: theme.colors.gray[300],
+    borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  contentContainer: {
-    flexDirection: 'row',
-    gap: 15,
+  personnelInfo: {
+    flex: 1,
   },
-  routeContainer: {
-    width: '100%',
-    backgroundColor: theme.colors.white,
-    flexDirection: 'row',
-    // justifyContent: 'space-between', // Let the inner container handle spacing
-    alignItems: 'flex-start', // Align icon to the top of the text content
-    borderRadius: 8,
-    paddingHorizontal: 16, // Adjusted padding
-    paddingVertical: 16, // Adjusted padding
-    gap: 16, // Gap between icon and text block
-  },
-  routeInfoContainer: {
-    // New style for the text block next to the icon
-    flex: 1, // Allow it to take available space
-    flexDirection: 'column',
-    gap: 8, // Gap between title and each route list
-  },
-  routeTitleText: {
-    // Style for the "Routes" title
+  personnelName: {
     fontFamily: theme.typography.fontFamily.primary.semiBold,
     fontSize: theme.typography.fontSize.lg,
-    color: theme.colors.gray[800],
-    marginBottom: 4, // Small space below the title
+    color: theme.colors.gray[900],
   },
-  routeList: {
-    flexDirection: 'row',
-    alignItems: 'center', // Vertically align text and icon in a route
-    gap: 8, // Gap between texts and icon in a route
-    // marginBottom: 4, // Optional: if you want more space between each route line
-  },
-  routeItemText: {
-    // Style for individual route points like "Centro"
+  personnelRole: {
     fontFamily: theme.typography.fontFamily.secondary.regular,
+    fontSize: theme.typography.fontSize.sm,
+    color: theme.colors.gray[600],
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginRight: 8,
+  },
+  ratingText: {
+    fontFamily: theme.typography.fontFamily.primary.medium,
     fontSize: theme.typography.fontSize.md,
-    color: theme.colors.gray[700],
+    color: theme.colors.gray[800],
+  },
+  routeTagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    paddingHorizontal: 8,
+  },
+  routeTag: {
+    fontFamily: theme.typography.fontFamily.secondary.medium,
+    fontSize: theme.typography.fontSize.sm,
+    color: theme.colors.gray[800],
+    backgroundColor: theme.colors.white,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    overflow: 'hidden', // for iOS to respect borderRadius
+  },
+  floatingOptionsContainer: {
+    padding: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

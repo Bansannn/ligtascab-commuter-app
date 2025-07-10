@@ -1,3 +1,4 @@
+/*
 import { supabase } from '~/utils/supabase';
 
 export const fetchTricycleDetails = async (tricycle_id: string) => {
@@ -9,3 +10,4 @@ export const fetchTricycleDetails = async (tricycle_id: string) => {
 
   return { data, error };
 };
+*/

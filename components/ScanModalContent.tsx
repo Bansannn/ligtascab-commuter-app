@@ -1,7 +1,6 @@
 import { useRouter } from 'expo-router';
 import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Tricycle } from '~/types/types';
-import { formatDate } from '~/utils/utils';
 import { theme } from '../utils/theme';
 
 type ScanModalContentProps = {
@@ -30,13 +29,15 @@ export default function ScanModalContent({
               <View style={styles.tricycleCardContent}>
                 <View style={styles.tricycleDetailsContainer}>
                   <View>
-                    <Text style={styles.tricycleCardDescription}>Plate Number</Text>
-                    <Text style={styles.tricycleDetailsTitle}>{tricycle.plate_number}</Text>
+                    <Text style={styles.tricycleCardDescription}>Chasis Franchise Number</Text>
+                    <Text style={styles.tricycleDetailsTitle}>
+                      {tricycle.compliance_details.franchise_number}
+                    </Text>
                   </View>
                   <View>
-                    <Text style={styles.tricycleCardDescription}>Registration Expiration</Text>
+                    <Text style={styles.tricycleCardDescription}>Chasis Body Color</Text>
                     <Text style={styles.tricycleDetailsTitle}>
-                      {formatDate(tricycle.registration_expiration.toLocaleString())}
+                      {tricycle.tricycle_details.body_color}
                     </Text>
                   </View>
                 </View>

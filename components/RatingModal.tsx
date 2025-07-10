@@ -39,8 +39,9 @@ export default function RatingModal({ visible, onClose, onSubmit }: RatingModalP
         <View style={styles.modalContainer}>
           <View style={styles.header}>
             <Text style={styles.title}>Rate Your Ride</Text>
-            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+            <TouchableOpacity onPress={handleSubmit} style={styles.closeButton}>
               <Feather name="x" size={24} color={theme.colors.gray[600]} />
+              
             </TouchableOpacity>
           </View>
 

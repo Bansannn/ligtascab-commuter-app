@@ -1,12 +1,10 @@
 import { AntDesign, FontAwesome6 } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
-import { useQuery } from '@tanstack/react-query';
 import { BarcodeScanningResult, CameraType, CameraView, useCameraPermissions } from 'expo-camera';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ScanModalContent from '~/components/ScanModalContent';
 import ScanModalError from '~/components/ScanModalError';
-import { fetchTricycleDetails } from '~/services/tricycles';
 import { Tricycle } from '~/types/types';
 import { theme } from '../../../utils/theme';
 
@@ -16,24 +14,9 @@ export default function Scan() {
   const [facing, setFacing] = useState<CameraType>('back');
 
   const [visible, setVisible] = useState(false);
-  const [scanResult, setScanResult] = useState<string | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
+  const [tricycle, setTricycle] = useState<Tricycle | null>(null);
   const isFocused = useIsFocused();
-
-  const { data: tricycle, isLoading } = useQuery<Tricycle | null>({
-    queryKey: ['tricycle-details', scanResult],
-    queryFn: async () => {
-      if (!scanResult) return null;
-      const { data, error } = await fetchTricycleDetails(scanResult);
-      if (error) {
-        setScanError('Invalid QR Code. Please try again.');
-      }
-      return data;
-    },
-    enabled: !!scanResult,
-    subscribed: isFocused,
-    retry: false,
-  });
 
   useEffect(() => {
     requestPermission();
@@ -48,7 +31,31 @@ export default function Scan() {
   }
 
   const onScanSuccess = (result: string) => {
-    setScanResult(result);
+    const mockTricycle: Tricycle = {
+      id: result,
+      plate_number: 'MCP-1234',
+      operator_id: 'OP-001',
+      status: 'Active',
+      registration_expiration: new Date('2025-12-31'),
+      franchise_expiration: new Date('2026-12-31'),
+      last_maintenance_date: new Date('2025-06-01'),
+      tricycle_details: {
+        model: 'TVS King',
+        year: '2022',
+        seating_capacity: '4',
+        body_color: 'Silver',
+        fuel_type: 'Gasoline',
+        mileage: '15000',
+        maintenance_status: 'Good',
+      },
+      compliance_details: {
+        registration_number: 'REG-91011',
+        franchise_number: '0423',
+        or_number: 'OR-151617',
+        cr_number: 'CR-181920',
+      },
+    };
+    setTricycle(mockTricycle);
     setCameraDisabled(true);
     setVisible(true);
   };
@@ -57,7 +64,7 @@ export default function Scan() {
     setScanError(null);
     setCameraDisabled(false);
     setVisible(false);
-    setScanResult(null);
+    setTricycle(null);
   };
 
   return (
@@ -105,7 +112,7 @@ export default function Scan() {
       {tricycle && (
         <ScanModalContent
           visible={visible}
-          isLoading={isLoading}
+          isLoading={false}
           tricycle={tricycle}
           exitModalHandler={exitModalHandler}
         />

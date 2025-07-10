@@ -1,6 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
-import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { theme } from '../utils/theme';
 import RatingModal from './RatingModal';
@@ -25,14 +24,9 @@ export default function InRideOptions() {
   };
 
   const handleReportSubmit = (violation: string, comment: string) => {
-    // Generate ticket number
     const ticketNumber = generateTicketNumber();
     setReportTicketNumber(ticketNumber);
-
-    // Here you can handle the report submission (e.g., send to API)
     console.log('Report submitted:', { violation, comment, ticketNumber });
-
-    // Close report modal and show confirmation
     setShowReportModal(false);
     setShowReportConfirmation(true);
   };
@@ -50,37 +44,27 @@ export default function InRideOptions() {
   };
 
   const handleRatingSubmit = (rating: number, comment: string) => {
-    // Here you can handle the rating submission (e.g., send to API)
     console.log('Rating submitted:', { rating, comment });
-
-    // Close modal and navigate to home
     setShowRatingModal(false);
     router.push({
       pathname: '/inside/home',
       params: { tricycle_id: '' },
     });
   };
+
   const handleRatingClose = () => {
     setShowRatingModal(false);
   };
+
   return (
     <View style={styles.container}>
-      <Pressable style={styles.report} onPress={handleReport}>
-        <Text style={styles.reportText}>Report</Text>
+      <Pressable style={styles.reportButton} onPress={handleReport}>
+        <Text style={styles.reportButtonText}>Report</Text>
       </Pressable>
-      <Pressable style={styles.home}>
-        <Feather
-          name="home"
-          size={24}
-          color={theme.colors.primary[600]}
-          onPress={() => {
-            router.push({ pathname: '/inside/home' });
-          }}
-        />
+      <Pressable style={styles.endRideButton} onPress={handleEndRide}>
+        <Text style={styles.endRideButtonText}>End Ride</Text>
       </Pressable>
-      <Pressable style={styles.end} onPress={handleEndRide}>
-        <Text style={styles.endText}>End Ride</Text>
-      </Pressable>
+
       <RatingModal
         visible={showRatingModal}
         onClose={handleRatingClose}
@@ -104,44 +88,41 @@ export default function InRideOptions() {
 
 const styles = StyleSheet.create({
   container: {
-    width: '90%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     flexDirection: 'row',
     gap: 12,
+    backgroundColor: theme.colors.white,
+    padding: 12,
+    borderRadius: 100, // Fully rounded ends for the container
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 8,
   },
-  report: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    alignItems: 'center',
-    borderColor: theme.colors.danger,
-    borderWidth: 1,
-    borderRadius: 32,
-  },
-  reportText: {
-    fontFamily: theme.typography.fontFamily.primary.medium,
-    fontSize: theme.typography.fontSize.sm,
-    color: theme.colors.danger,
-  },
-  home: {
-    padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderRadius: 22,
-    borderColor: theme.colors.primary[600],
-  },
-  end: {
+  reportButton: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 12,
-    backgroundColor: theme.colors.primary[600],
-    borderRadius: 32,
+    justifyContent: 'center',
+    paddingVertical: 16,
+    backgroundColor: theme.colors.gray[100],
+    borderRadius: 100,
   },
-  endText: {
+  reportButtonText: {
+    fontFamily: theme.typography.fontFamily.primary.semiBold,
+    fontSize: theme.typography.fontSize.md,
+    color: theme.colors.gray[800],
+  },
+  endRideButton: {
+    flex: 2, // Takes up more space to show prominence
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 16,
+    backgroundColor: theme.colors.danger,
+    borderRadius: 100,
+  },
+  endRideButtonText: {
     fontFamily: theme.typography.fontFamily.primary.semiBold,
     fontSize: theme.typography.fontSize.md,
     color: theme.colors.white,
-    fontWeight: '600',
   },
 });

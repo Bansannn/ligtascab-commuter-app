@@ -5,7 +5,7 @@ export type Tricycle = {
     model: string;
     year: string;
     seating_capacity: string;
-    body_number: string;
+    body_color: string;
     fuel_type: string;
     mileage: string;
     maintenance_status: string;
