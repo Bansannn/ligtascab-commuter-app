@@ -69,10 +69,10 @@ const NotificationToggle = ({
 export default function ProfilePage() {
   // Store initial state to handle cancellation
   const initialData = {
-    name: 'Walt Haughfin',
-    address: '123 Panganiban Drive, Naga City',
-    email: 'w.haughfin@gbox.adnu.edu.ph',
-    phone: '+63 912 345 6789',
+    name: 'Vincent Olpate',
+    address: 'Camaligan',
+    email: 'vincent.olpate@unc.edu.ph',
+    phone: '09123456789',
     pushEnabled: true,
     emailEnabled: false,
   };

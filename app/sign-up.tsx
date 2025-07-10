@@ -1,5 +1,5 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -12,25 +12,23 @@ import {
 } from 'react-native';
 import { theme } from '../utils/theme';
 
-export default function SignInPage() {
+export default function SignUpPage() {
   const [mobileNumber, setMobileNumber] = useState('');
-  const [password, setPassword] = useState('');
   const router = useRouter();
 
-  const handleSignIn = () => {
+  const handleSendOtp = () => {
     // Static navigation for presentation
-    router.replace('/inside/(tabs)/home');
+    router.push({ pathname: '/verify-otp', params: { mobileNumber } });
   };
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.pageContainer}>
-      <Text style={styles.logo}>ligtascab.</Text>
-      <Text style={styles.logoSmall}>for a safer tricycle commute.</Text>
+      <Stack.Screen options={{ title: 'Sign Up', headerBackTitle: 'Back' }} />
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>Welcome Back</Text>
-        <Text style={styles.subtitle}>Sign in to continue your journey</Text>
+        <Text style={styles.title}>Create Account</Text>
+        <Text style={styles.subtitle}>Enter your mobile number to get started</Text>
 
         <View style={styles.formContainer}>
           <View style={styles.inputContainer}>
@@ -44,26 +42,8 @@ export default function SignInPage() {
               placeholderTextColor={theme.colors.gray[500]}
             />
           </View>
-          <View style={styles.inputContainer}>
-            <MaterialIcons name="lock-outline" size={20} color={theme.colors.gray[400]} />
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              placeholderTextColor={theme.colors.gray[500]}
-            />
-          </View>
-          <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-            <Text style={styles.buttonText}>Sign In</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Don't have an account? </Text>
-          <TouchableOpacity onPress={() => router.push('/sign-up')}>
-            <Text style={[styles.footerText, styles.linkText]}>Sign Up</Text>
+          <TouchableOpacity style={styles.button} onPress={handleSendOtp}>
+            <Text style={styles.buttonText}>Send OTP</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -75,33 +55,17 @@ const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
     backgroundColor: theme.colors.white,
-    paddingTop: 150,
   },
   contentContainer: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 24,
-    paddingBottom: 240,
-    gap: 20,
+    padding: 24,
+    gap: 24,
   },
   title: {
     fontFamily: theme.typography.fontFamily.primary.bold,
     fontSize: 36,
     color: theme.colors.gray[900],
-    textAlign: 'center',
-  },
-  logo: {
-    fontFamily: theme.typography.fontFamily.secondary.bold,
-    color: theme.colors.primary[600],
-    fontSize: 40,
-    justifyContent: 'center',
-    textAlign: 'center',
-  },
-  logoSmall: {
-    fontFamily: theme.typography.fontFamily.secondary.regular,
-    color: theme.colors.gray[900],
-    fontSize: 10,
-    justifyContent: 'center',
     textAlign: 'center',
   },
   subtitle: {
@@ -140,20 +104,5 @@ const styles = StyleSheet.create({
     fontFamily: theme.typography.fontFamily.primary.bold,
     fontSize: theme.typography.fontSize.md,
     color: theme.colors.white,
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  footerText: {
-    fontFamily: theme.typography.fontFamily.secondary.regular,
-    fontSize: theme.typography.fontSize.md,
-    color: theme.colors.gray[600],
-  },
-  linkText: {
-    fontFamily: theme.typography.fontFamily.primary.semiBold,
-    color: theme.colors.primary[600],
   },
 });

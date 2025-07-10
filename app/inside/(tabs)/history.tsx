@@ -36,7 +36,7 @@ export interface Report {
 }
 
 // Expanded Mock Data
-const rideHistory: Ride[] = [
+export const rideHistory: Ride[] = [
   {
     id: 'ride1',
     date: 'Wed July 9, 2025',

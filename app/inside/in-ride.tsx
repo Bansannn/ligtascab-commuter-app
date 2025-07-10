@@ -1,7 +1,8 @@
-import { AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, Feather, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import EmergencyModal from '~/components/EmergencyModal';
 import InRideOptions from '~/components/InRideOptions';
 import PersonnelRatingModal, { Personnel } from '~/components/PersonnelRatingModal';
 import { Tricycle } from '~/types/types';
@@ -10,6 +11,7 @@ import { theme } from '../../utils/theme';
 export default function InRidePage() {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedPersonnel, setSelectedPersonnel] = useState<Personnel | null>(null);
+  const [isEmergencyModalVisible, setEmergencyModalVisible] = useState(false);
 
   const driver: Personnel = {
     name: 'Walt Haughfin',
@@ -152,18 +154,27 @@ export default function InRidePage() {
               <Text style={styles.routeTag}>Centro ↔ Conception Pequena</Text>
             </View>
           </View>
-          
-        </View>
-
-        <View style={styles.floatingOptionsContainer}>
-          <InRideOptions />
         </View>
       </ScrollView>
+
+      <View style={styles.floatingContainer}>
+        <InRideOptions />
+        <TouchableOpacity
+          style={styles.emergencyButton}
+          onPress={() => setEmergencyModalVisible(true)}>
+          <Feather name="alert-triangle" size={24} color={theme.colors.white} />
+          <Text style={styles.emergencyButtonText}>EMERGENCY</Text>
+        </TouchableOpacity>
+      </View>
 
       <PersonnelRatingModal
         visible={isModalVisible}
         onClose={closeModal}
         personnel={selectedPersonnel}
+      />
+      <EmergencyModal
+        visible={isEmergencyModalVisible}
+        onClose={() => setEmergencyModalVisible(false)}
       />
     </View>
   );
@@ -187,7 +198,7 @@ const styles = StyleSheet.create({
   },
   scrollContentContainer: {
     paddingTop: 300, // Space for the header image
-    paddingBottom: 120, // Space for floating buttons
+    paddingBottom: 180, // Increased space for floating buttons
   },
   contentSheet: {
     backgroundColor: theme.colors.primary[600],
@@ -307,9 +318,34 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: 'hidden', // for iOS to respect borderRadius
   },
-  floatingOptionsContainer: {
+  floatingContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     padding: 16,
-    justifyContent: 'center',
+    gap: 12,
     alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  emergencyButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.colors.danger,
+    paddingVertical: 16,
+    borderRadius: 12,
+    gap: 12,
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    width: '100%',
+  },
+  emergencyButtonText: {
+    fontFamily: theme.typography.fontFamily.primary.bold,
+    fontSize: theme.typography.fontSize.lg,
+    color: theme.colors.white,
   },
 });
