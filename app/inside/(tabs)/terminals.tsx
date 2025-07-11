@@ -11,7 +11,7 @@ export default function TerminalsPage() {
   const [userLocation, setUserLocation] = useState<LatLng | null>(null);
   const [destination, setDestination] = useState('');
   const [destinationCoords, setDestinationCoords] = useState<LatLng | null>(null);
-  const [isPinning, setIsPinning] = useState(false);
+  const [isPinning, setIsPinning] = useState(true);
   const mapRef = useRef<MapView>(null);
   const router = useRouter();
 
@@ -53,7 +53,6 @@ export default function TerminalsPage() {
       const { coordinate } = event.nativeEvent;
       setDestinationCoords(coordinate);
       setDestination(`Pinned Location`);
-      setIsPinning(false);
     }
   };
 
@@ -114,14 +113,12 @@ export default function TerminalsPage() {
             onFocus={() => setIsPinning(true)}
             placeholderTextColor={theme.colors.primary[200]}
           />
-          <TouchableOpacity onPress={() => setIsPinning(true)}>
-            <Text style={styles.useCurrentText}>Pin</Text>
-          </TouchableOpacity>
+
         </View>
         <TouchableOpacity
-          style={[styles.findButton, !userLocation && styles.findButtonDisabled]}
+          style={[styles.findButton, !destination && styles.findButtonDisabled]}
           onPress={handleFindTricycles}
-          disabled={!userLocation}>
+          disabled={!destination && !userLocation}>
           <FontAwesome5 name="motorcycle" size={16} color={theme.colors.primary[600]} />
           <Text style={styles.findButtonText}>Find Tricycles</Text>
         </TouchableOpacity>
