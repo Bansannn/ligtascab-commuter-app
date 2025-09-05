@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     if (error) return error.message;
-    router.push('/inside/(tabs)/home');
+    router.push('/(private)/(tabs)/home');
   }
 
   async function signOutUser() {
