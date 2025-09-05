@@ -1,10 +1,10 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
-import { theme } from '../utils/theme';
 import RatingModal from './RatingModal';
 import ReportModal from './ReportModal';
 import ReportConfirmationModal from './ReportConfirmationModal';
+import { theme } from '../theme/theme';
 
 export default function InRideOptions() {
   const router = useRouter();

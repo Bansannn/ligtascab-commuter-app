@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { theme } from '../../utils/theme';
+import { theme } from '~/src/theme/theme';
 
 const queryClient = new QueryClient();
 

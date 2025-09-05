@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
-import { Tricycle } from '~/types/types';
-import { theme } from '../utils/theme';
+import { theme } from '../theme/theme';
+import { Tricycle } from '../types';
 
 type ScanModalContentProps = {
   visible: boolean;

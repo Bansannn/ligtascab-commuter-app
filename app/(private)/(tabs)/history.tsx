@@ -1,18 +1,11 @@
 import { AntDesign, Feather } from '@expo/vector-icons';
 import React, { useMemo, useState } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import ReportConfirmationModal from '~/components/ReportConfirmationModal';
-import ReportDetailModal from '~/components/ReportDetailModal';
-import ReportModal from '~/components/ReportModal';
-import RideDetailModal from '~/components/RideDetailModal';
-import { theme } from '../../../utils/theme';
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import ReportConfirmationModal from '~/src/components/ReportConfirmationModal';
+import ReportDetailModal from '~/src/components/ReportDetailModal';
+import ReportModal from '~/src/components/ReportModal';
+import RideDetailModal from '~/src/components/RideDetailModal';
+import { theme } from '~/src/theme/theme';
 
 // Expanded Mock Data Types
 export interface Ride {
@@ -89,13 +82,7 @@ const reportHistory: Report[] = [
 ];
 
 // Helper Components
-const ReportHistoryCard = ({
-  report,
-  onPress,
-}: {
-  report: Report;
-  onPress: () => void;
-}) => {
+const ReportHistoryCard = ({ report, onPress }: { report: Report; onPress: () => void }) => {
   const isPending = report.status === 'Pending';
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
@@ -158,7 +145,9 @@ export default function HistoryPage() {
 
   return (
     <View style={styles.pageContainer}>
-      <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}>
         <Text style={styles.headerTitle}>Ride History</Text>
 
         {/* Ride History Section */}

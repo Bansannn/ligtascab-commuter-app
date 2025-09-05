@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import MapView, { LatLng, Marker, MapPressEvent } from 'react-native-maps';
-import { theme } from '../../../utils/theme';
+import { theme } from '~/src/theme/theme';
 
 export default function TerminalsPage() {
   const [origin, setOrigin] = useState('');
@@ -113,7 +113,6 @@ export default function TerminalsPage() {
             onFocus={() => setIsPinning(true)}
             placeholderTextColor={theme.colors.primary[200]}
           />
-
         </View>
         <TouchableOpacity
           style={[styles.findButton, !destination && styles.findButtonDisabled]}

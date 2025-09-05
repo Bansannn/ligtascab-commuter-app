@@ -2,13 +2,11 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { theme } from '../../../utils/theme';
 import { rideHistory } from './history';
+import { theme } from '~/src/theme/theme';
 
 const QuickActionButton = ({ icon, label, onPress }) => (
-  <TouchableOpacity
-    style={styles.actionButton}
-    onPress={onPress}>
+  <TouchableOpacity style={styles.actionButton} onPress={onPress}>
     <MaterialIcons name={icon} size={28} color={theme.colors.primary[600]} />
     <Text style={styles.actionButtonText}>{label}</Text>
   </TouchableOpacity>

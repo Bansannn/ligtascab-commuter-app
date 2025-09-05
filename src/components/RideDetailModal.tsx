@@ -1,8 +1,8 @@
 import React from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { theme } from '../utils/theme';
-import { Ride } from '~/app/inside/(tabs)/history';
+import { theme } from '../theme/theme';
+import { Ride } from '~/app/(private)/(tabs)/history';
 
 interface RideDetailModalProps {
   visible: boolean;
@@ -18,16 +18,26 @@ const DetailRow = ({ label, value }: { label: string; value: string }) => (
   </View>
 );
 
-export default function RideDetailModal({ visible, onClose, ride, onReport }: RideDetailModalProps) {
+export default function RideDetailModal({
+  visible,
+  onClose,
+  ride,
+  onReport,
+}: RideDetailModalProps) {
   if (!ride) return null;
 
-const rideDate = new Date(ride.date.replace(',', ' '));
+  const rideDate = new Date(ride.date.replace(',', ' '));
   const now = new Date();
   const timeDifference = now.getDate() - rideDate.getDate();
   const isReportable = timeDifference < 7;
 
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose} statusBarTranslucent>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onClose}
+      statusBarTranslucent>
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>

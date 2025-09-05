@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { theme } from '../utils/theme';
+import { theme } from '../theme/theme';
 
 interface RatingModalProps {
   visible: boolean;
@@ -41,7 +41,6 @@ export default function RatingModal({ visible, onClose, onSubmit }: RatingModalP
             <Text style={styles.title}>Rate Your Ride</Text>
             <TouchableOpacity onPress={handleSubmit} style={styles.closeButton}>
               <Feather name="x" size={24} color={theme.colors.gray[600]} />
-              
             </TouchableOpacity>
           </View>
 

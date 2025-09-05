@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
-import { theme } from '../utils/theme';
+import { theme } from '../theme/theme';
 
 interface EmergencyModalProps {
   visible: boolean;
@@ -15,7 +15,12 @@ const emergencyContacts = [
 
 export default function EmergencyModal({ visible, onClose }: EmergencyModalProps) {
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose} statusBarTranslucent>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onClose}
+      statusBarTranslucent>
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
           <View style={styles.header}>
@@ -23,7 +28,8 @@ export default function EmergencyModal({ visible, onClose }: EmergencyModalProps
             <Text style={styles.title}>EMERGENCY ACTIVATED</Text>
           </View>
           <Text style={styles.message}>
-            Your emergency alert has been sent. Local authorities and your emergency contacts have been notified of your location and ride details.
+            Your emergency alert has been sent. Local authorities and your emergency contacts have
+            been notified of your location and ride details.
           </Text>
           <View style={styles.contactsSection}>
             <Text style={styles.contactsTitle}>Notified Contacts:</Text>

@@ -1,8 +1,9 @@
 import React from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { theme } from '../utils/theme';
-import { Report } from '~/app/inside/(tabs)/history';
+import { theme } from '../theme/theme';
+
+import { Report } from '~/app/(private)/(tabs)/history';
 
 interface ReportDetailModalProps {
   visible: boolean;
@@ -21,7 +22,12 @@ export default function ReportDetailModal({ visible, onClose, report }: ReportDe
   if (!report) return null;
 
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose} statusBarTranslucent>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onClose}
+      statusBarTranslucent>
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>

@@ -1,6 +1,6 @@
 import { Feather } from '@expo/vector-icons';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
-import { theme } from '../utils/theme';
+import { theme } from '../theme/theme';
 
 type ScanModalErrorProps = {
   visible: boolean;

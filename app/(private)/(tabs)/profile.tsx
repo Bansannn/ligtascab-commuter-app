@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { theme } from '../../../utils/theme';
+import { theme } from '~/src/theme/theme';
 
 const ProfileInput = ({
   label,
@@ -107,7 +107,9 @@ export default function ProfilePage() {
 
   return (
     <View style={styles.pageContainer}>
-      <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}>
         <View style={styles.headerContainer}>
           <Text style={styles.headerTitle}>My Profile</Text>
           {!isEditing ? (

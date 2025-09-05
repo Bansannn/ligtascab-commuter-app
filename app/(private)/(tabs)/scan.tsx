@@ -3,10 +3,10 @@ import { useIsFocused } from '@react-navigation/native';
 import { BarcodeScanningResult, CameraType, CameraView, useCameraPermissions } from 'expo-camera';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import ScanModalContent from '~/components/ScanModalContent';
-import ScanModalError from '~/components/ScanModalError';
-import { Tricycle } from '~/types/types';
-import { theme } from '../../../utils/theme';
+import ScanModalContent from '~/src/components/ScanModalContent';
+import ScanModalError from '~/src/components/ScanModalError';
+import { theme } from '~/src/theme/theme';
+import { Tricycle } from '~/src/types';
 
 export default function Scan() {
   const [permission, requestPermission] = useCameraPermissions();

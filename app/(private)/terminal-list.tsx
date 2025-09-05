@@ -3,7 +3,7 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
-import { theme } from '../../utils/theme';
+import { theme } from '~/src/theme/theme';
 
 interface Terminal {
   id: string;
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
     color: theme.colors.white,
   },
   fareValue: {
-        paddingHorizontal: 8,
+    paddingHorizontal: 8,
     fontFamily: theme.typography.fontFamily.primary.semiBold,
     fontSize: theme.typography.fontSize.md,
     color: theme.colors.white,

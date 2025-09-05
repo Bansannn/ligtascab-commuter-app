@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { theme } from '../utils/theme';
+import { theme } from '../theme/theme';
 
 interface ReportModalProps {
   visible: boolean;

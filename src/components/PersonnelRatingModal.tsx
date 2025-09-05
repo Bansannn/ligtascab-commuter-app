@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { AntDesign, Feather } from '@expo/vector-icons';
-import { theme } from '../utils/theme';
+import { theme } from '../theme/theme';
 
 interface Comment {
   id: string;

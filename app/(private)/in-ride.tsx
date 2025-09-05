@@ -1,12 +1,18 @@
-import { AntDesign, Feather, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import {
+  AntDesign,
+  Feather,
+  FontAwesome5,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import EmergencyModal from '~/components/EmergencyModal';
-import InRideOptions from '~/components/InRideOptions';
-import PersonnelRatingModal, { Personnel } from '~/components/PersonnelRatingModal';
-import { Tricycle } from '~/types/types';
-import { theme } from '../../utils/theme';
+import EmergencyModal from '~/src/components/EmergencyModal';
+import InRideOptions from '~/src/components/InRideOptions';
+import PersonnelRatingModal, { Personnel } from '~/src/components/PersonnelRatingModal';
+import { theme } from '~/src/theme/theme';
+import { Tricycle } from '~/src/types';
 
 export default function InRidePage() {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -68,7 +74,7 @@ export default function InRidePage() {
 
   return (
     <View style={styles.pageContainer}>
-      <Image style={styles.headerImage} source={require('~/assets/sample-tricycle.png')} />
+      <Image style={styles.headerImage} source={require('~/src/assets/sample-tricycle.png')} />
 
       <ScrollView
         style={styles.scrollContainer}
