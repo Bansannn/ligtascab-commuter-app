@@ -2,6 +2,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {
   Alert,
+  Pressable,
   ScrollView,
   StyleSheet,
   Switch,
@@ -10,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useAuth } from '~/src/hooks/useAuth';
 import { theme } from '~/src/theme/theme';
 
 const ProfileInput = ({
@@ -67,6 +69,7 @@ const NotificationToggle = ({
 );
 
 export default function ProfilePage() {
+  const { signOutUser } = useAuth();
   // Store initial state to handle cancellation
   const initialData = {
     name: 'Vincent Olpate',
@@ -113,7 +116,7 @@ export default function ProfilePage() {
         <View style={styles.headerContainer}>
           <Text style={styles.headerTitle}>My Profile</Text>
           {!isEditing ? (
-            <TouchableOpacity style={styles.editButton} onPress={() => setIsEditing(true)}>
+            <TouchableOpacity style={styles.editButton} onPress={() => signOutUser()}>
               <MaterialIcons name="edit" size={18} color={theme.colors.primary[600]} />
               <Text style={styles.editButtonText}>Edit</Text>
             </TouchableOpacity>
@@ -179,6 +182,10 @@ export default function ProfilePage() {
             onValueChange={setEmailEnabled}
             disabled={!isEditing}
           />
+          <TouchableOpacity style={styles.logoutButton} onPress={signOutUser}>
+            <MaterialIcons name="logout" size={18} color={theme.colors.primary[600]} />
+            <Text style={styles.editButtonText}>Logout</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
@@ -213,6 +220,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.colors.primary[100],
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    gap: 6,
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.colors.black[100],
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 8,
