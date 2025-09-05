@@ -1,7 +1,9 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import { Stack, useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { Stack } from 'expo-router';
+import { useState } from 'react';
 import {
+  ActivityIndicator,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -10,15 +12,29 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { theme } from '../utils/theme';
+import { requestOtp } from '~/src/services/authentication';
+import { theme } from '~/src/theme/theme';
 
 export default function SignUpPage() {
   const [mobileNumber, setMobileNumber] = useState('');
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
-  const handleSendOtp = () => {
-    // Static navigation for presentation
-    router.push({ pathname: '/verify-otp', params: { mobileNumber } });
+  const handleSendOtp = async () => {
+    if (!mobileNumber) {
+      Alert.alert('Error', 'Please enter a valid mobile number');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const data = await requestOtp(mobileNumber);
+      console.log(data);
+    } catch (err) {
+      console.error(err);
+      Alert.alert('Error', 'Something went wrong.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -42,8 +58,16 @@ export default function SignUpPage() {
               placeholderTextColor={theme.colors.gray[500]}
             />
           </View>
-          <TouchableOpacity style={styles.button} onPress={handleSendOtp}>
-            <Text style={styles.buttonText}>Send OTP</Text>
+
+          <TouchableOpacity
+            style={[styles.button, loading && { opacity: 0.7 }]}
+            onPress={handleSendOtp}
+            disabled={loading}>
+            {loading ? (
+              <ActivityIndicator color={theme.colors.white} />
+            ) : (
+              <Text style={styles.buttonText}>Send OTP</Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>

@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { theme } from '../utils/theme';
+import { theme } from '~/src/theme/theme';
 
 export default function VerifyOtpPage() {
   const [otp, setOtp] = useState('');
@@ -47,7 +47,7 @@ export default function VerifyOtpPage() {
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Didn't receive the code? </Text>
+          <Text style={styles.footerText}>Didn&apos;t receive the code? </Text>
           <TouchableOpacity onPress={() => {}}>
             <Text style={[styles.footerText, styles.linkText]}>Resend</Text>
           </TouchableOpacity>

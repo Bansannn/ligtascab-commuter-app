@@ -1,7 +1,7 @@
 import { Stack, SplashScreen } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
-import { fonts } from '../utils/typography';
+import { fonts } from '~/src/theme/typography';
 
 SplashScreen.preventAutoHideAsync();
 

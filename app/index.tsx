@@ -1,6 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { theme } from '../utils/theme';
+import { theme } from '~/src/theme/theme';
 
 export default function SignInPage() {
   const [mobileNumber, setMobileNumber] = useState('');
@@ -61,7 +61,7 @@ export default function SignInPage() {
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Don't have an account? </Text>
+          <Text style={styles.footerText}>Don&apos;t have an account? </Text>
           <TouchableOpacity onPress={() => router.push('/sign-up')}>
             <Text style={[styles.footerText, styles.linkText]}>Sign Up</Text>
           </TouchableOpacity>

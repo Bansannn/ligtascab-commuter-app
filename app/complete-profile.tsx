@@ -1,6 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { theme } from '../utils/theme';
+import { theme } from '~/src/theme/theme';
 
 const ProfileInput = ({
   label,
