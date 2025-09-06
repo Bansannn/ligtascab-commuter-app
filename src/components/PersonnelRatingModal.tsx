@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { theme } from '../theme/theme';
+import { Driver, Operator } from '../types';
 
 interface Comment {
   id: string;
@@ -9,17 +10,10 @@ interface Comment {
   author: string;
 }
 
-export interface Personnel {
-  name: string;
-  role: 'Driver' | 'Operator';
-  rating: number;
-  comments: Comment[];
-}
-
 interface PersonnelRatingModalProps {
   visible: boolean;
   onClose: () => void;
-  personnel: Personnel | null;
+  personnel: Driver | Operator | null;
 }
 
 const StarRating = ({ rating }: { rating: number }) => {
@@ -67,20 +61,20 @@ export default function PersonnelRatingModal({
             <View style={styles.avatar}>
               <AntDesign name="user" size={32} color={theme.colors.gray[800]} />
             </View>
-            <Text style={styles.name}>{personnel.name}</Text>
-            <Text style={styles.role}>{personnel.role}</Text>
+            <Text style={styles.name}>{`${personnel.first_name} ${personnel.last_name}`}</Text>
+            {/* <Text style={styles.role}>{`${personnel}`}</Text> */}
           </View>
 
-          <View style={styles.ratingSection}>
+          {/* <View style={styles.ratingSection}>
             <Text style={styles.ratingValue}>{personnel.rating.toFixed(1)}</Text>
             <StarRating rating={personnel.rating} />
             <Text style={styles.ratingCount}>Based on recent reviews</Text>
-          </View>
+          </View> */}
 
           <View style={styles.separator} />
 
           <Text style={styles.commentsTitle}>Comments</Text>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          {/* <ScrollView showsVerticalScrollIndicator={false}>
             {personnel.comments.map((comment) => (
               <View key={comment.id} style={styles.commentItem}>
                 <Text style={styles.commentText}>"{comment.text}"</Text>
@@ -90,7 +84,7 @@ export default function PersonnelRatingModal({
             {personnel.comments.length === 0 && (
               <Text style={styles.commentText}>No comments yet.</Text>
             )}
-          </ScrollView>
+          </ScrollView> */}
         </View>
       </View>
     </Modal>

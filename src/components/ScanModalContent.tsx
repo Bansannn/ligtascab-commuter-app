@@ -1,22 +1,21 @@
 import { useRouter } from 'expo-router';
 import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { theme } from '../theme/theme';
-import { Tricycle } from '../types';
+import { useRide } from '../hooks/useRide';
 
 type ScanModalContentProps = {
   visible: boolean;
   isLoading: boolean;
-  tricycle: Tricycle;
   exitModalHandler: () => void;
 };
 
 export default function ScanModalContent({
   visible,
   isLoading,
-  tricycle,
   exitModalHandler,
 }: ScanModalContentProps) {
   const router = useRouter();
+  const { tricycleDetails } = useRide();
   return (
     <Modal visible={visible} transparent animationType="none" statusBarTranslucent>
       <View style={styles.modalOverlay}>
@@ -31,14 +30,14 @@ export default function ScanModalContent({
                   <View>
                     <Text style={styles.tricycleCardDescription}>Chasis Franchise Number</Text>
                     <Text style={styles.tricycleDetailsTitle}>
-                      {tricycle.compliance_details.franchise_number}
+                      {tricycleDetails?.compliance_details.franchise_number}
                     </Text>
                   </View>
                   <View>
                     <Text style={styles.tricycleCardDescription}>Chasis Body Color</Text>
-                    <Text style={styles.tricycleDetailsTitle}>
+                    {/* <Text style={styles.tricycleDetailsTitle}>
                       {tricycle.tricycle_details.body_color}
-                    </Text>
+                    </Text> */}
                   </View>
                 </View>
               </View>
@@ -54,8 +53,7 @@ export default function ScanModalContent({
                   onPress={() => {
                     exitModalHandler();
                     router.push({
-                      pathname: '/inside/in-ride',
-                      params: { tricycle_id: tricycle.id },
+                      pathname: '/(private)/in-ride',
                     });
                   }}>
                   <Text style={styles.yesButtonText}>Yes</Text>

@@ -30,12 +30,12 @@ export default function HomePage() {
           <QuickActionButton
             icon="qr-code-scanner"
             label="Scan QR"
-            onPress={() => router.push('/inside/(tabs)/scan')}
+            onPress={() => router.push('/(private)/(tabs)/scan')}
           />
           <QuickActionButton
             icon="map"
             label="Find Terminal"
-            onPress={() => router.push('/inside/(tabs)/terminals')}
+            onPress={() => router.push('/(private)/(tabs)/terminals')}
           />
         </View>
       </View>

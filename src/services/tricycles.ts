@@ -1,5 +1,4 @@
-/*
-import { supabase } from '~/utils/supabase';
+import { supabase } from './supabase';
 
 export const fetchTricycleDetails = async (tricycle_id: string) => {
   const { data, error } = await supabase
@@ -10,4 +9,3 @@ export const fetchTricycleDetails = async (tricycle_id: string) => {
 
   return { data, error };
 };
-*/

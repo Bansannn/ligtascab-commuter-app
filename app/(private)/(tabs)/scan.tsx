@@ -1,26 +1,49 @@
 import { AntDesign, FontAwesome6 } from '@expo/vector-icons';
-import { useIsFocused } from '@react-navigation/native';
+import { useQuery } from '@tanstack/react-query';
 import { BarcodeScanningResult, CameraType, CameraView, useCameraPermissions } from 'expo-camera';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ScanModalContent from '~/src/components/ScanModalContent';
 import ScanModalError from '~/src/components/ScanModalError';
+import { useRide } from '~/src/hooks/useRide';
+import { fetchTricycleDetails } from '~/src/services/tricycles';
 import { theme } from '~/src/theme/theme';
 import { Tricycle } from '~/src/types';
 
 export default function Scan() {
+  const { setTricycleDetails } = useRide();
   const [permission, requestPermission] = useCameraPermissions();
   const [cameraDisabled, setCameraDisabled] = useState(false);
   const [facing, setFacing] = useState<CameraType>('back');
-
   const [visible, setVisible] = useState(false);
+
   const [scanError, setScanError] = useState<string | null>(null);
-  const [tricycle, setTricycle] = useState<Tricycle | null>(null);
-  const isFocused = useIsFocused();
+  const [scanResult, setScanResult] = useState('');
 
   useEffect(() => {
     requestPermission();
   }, [requestPermission]);
+
+  const { data: tricycle_details } = useQuery<Tricycle | null>({
+    queryKey: ['tricycle-details', scanResult],
+    queryFn: async () => {
+      if (!scanResult) return null;
+      const { data, error } = await fetchTricycleDetails(scanResult);
+      if (error) {
+        setScanError(error.message);
+      }
+      return data;
+    },
+    enabled: !!scanResult,
+    retry: true,
+  });
+
+  useEffect(() => {
+    if (tricycle_details) {
+      setTricycleDetails(tricycle_details);
+      setVisible(true);
+    }
+  }, [tricycle_details, setTricycleDetails]);
 
   if (!permission) {
     return <View />;
@@ -30,41 +53,10 @@ export default function Scan() {
     setFacing((current) => (current === 'back' ? 'front' : 'back'));
   }
 
-  const onScanSuccess = (result: string) => {
-    const mockTricycle: Tricycle = {
-      id: result,
-      plate_number: 'MCP-1234',
-      operator_id: 'OP-001',
-      status: 'Active',
-      registration_expiration: new Date('2025-12-31'),
-      franchise_expiration: new Date('2026-12-31'),
-      last_maintenance_date: new Date('2025-06-01'),
-      tricycle_details: {
-        model: 'TVS King',
-        year: '2022',
-        seating_capacity: '4',
-        body_color: 'Silver',
-        fuel_type: 'Gasoline',
-        mileage: '15000',
-        maintenance_status: 'Good',
-      },
-      compliance_details: {
-        registration_number: 'REG-91011',
-        franchise_number: '0423',
-        or_number: 'OR-151617',
-        cr_number: 'CR-181920',
-      },
-    };
-    setTricycle(mockTricycle);
-    setCameraDisabled(true);
-    setVisible(true);
-  };
-
   const exitModalHandler = () => {
     setScanError(null);
     setCameraDisabled(false);
     setVisible(false);
-    setTricycle(null);
   };
 
   return (
@@ -84,7 +76,7 @@ export default function Scan() {
               facing={facing}
               onBarcodeScanned={(scanningResult: BarcodeScanningResult) => {
                 if (!!scanningResult.data) {
-                  onScanSuccess(scanningResult.data);
+                  setScanResult(scanningResult.data);
                 }
               }}
               barcodeScannerSettings={{
@@ -109,13 +101,8 @@ export default function Scan() {
           exitModalHandler={exitModalHandler}
         />
       )}
-      {tricycle && (
-        <ScanModalContent
-          visible={visible}
-          isLoading={false}
-          tricycle={tricycle}
-          exitModalHandler={exitModalHandler}
-        />
+      {tricycle_details && (
+        <ScanModalContent visible={visible} isLoading={false} exitModalHandler={exitModalHandler} />
       )}
     </>
   );
