@@ -66,13 +66,6 @@ export default function SignInPage() {
             <Text style={[styles.footerText, styles.linkText]}>Sign Up</Text>
           </TouchableOpacity>
         </View>
-        {/* FOR TESTING PURPOSE */}
-        <TouchableOpacity onPress={() => router.push('/(private)/(tabs)/home')}>
-          <Text style={[styles.footerText, styles.linkText]}>
-            Go to private page(should not work)
-          </Text>
-          <Text style={{ fontSize: 12 }}>because user is not authenticated</Text>
-        </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
   );

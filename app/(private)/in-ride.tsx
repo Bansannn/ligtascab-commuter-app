@@ -5,64 +5,49 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from '@expo/vector-icons';
+import { useQuery } from '@tanstack/react-query';
 import { Image } from 'expo-image';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import EmergencyModal from '~/src/components/EmergencyModal';
 import InRideOptions from '~/src/components/InRideOptions';
-import PersonnelRatingModal, { Personnel } from '~/src/components/PersonnelRatingModal';
+import PersonnelRatingModal from '~/src/components/PersonnelRatingModal';
+import { useRide } from '~/src/hooks/useRide';
+import { fetchDriverDetails, fetchOperatorDetails } from '~/src/services/db';
 import { theme } from '~/src/theme/theme';
-import { Tricycle } from '~/src/types';
+import { Driver, Operator } from '~/src/types';
 
 export default function InRidePage() {
+  const { tricycleDetails } = useRide();
   const [isModalVisible, setModalVisible] = useState(false);
-  const [selectedPersonnel, setSelectedPersonnel] = useState<Personnel | null>(null);
+  const [selectedPersonnel, setSelectedPersonnel] = useState<Driver | Operator | null>(null);
   const [isEmergencyModalVisible, setEmergencyModalVisible] = useState(false);
 
-  const driver: Personnel = {
-    name: 'Walt Haughfin',
-    role: 'Driver',
-    rating: 4.8,
-    comments: [
-      { id: 'c1', text: 'Very polite and drove safely.', author: 'Jane D.' },
-      { id: 'c2', text: 'Knew a shortcut that saved time.', author: 'John S.' },
-      { id: 'c3', text: 'Clean tricycle, friendly driver.', author: 'Emily R.' },
-    ],
-  };
-
-  const operator: Personnel = {
-    name: 'Bella Wright',
-    role: 'Operator',
-    rating: 4.5,
-    comments: [{ id: 'c4', text: 'Helpful when I called for a lost item.', author: 'Mike T.' }],
-  };
-
-  const tricycle: Tricycle = {
-    id: 'MOCK-ID-001',
-    plate_number: 'MCP-1234',
-    operator_id: 'OP-001',
-    status: 'Active',
-    registration_expiration: new Date('2025-12-31'),
-    franchise_expiration: new Date('2026-12-31'),
-    last_maintenance_date: new Date('2025-06-01'),
-    tricycle_details: {
-      model: 'TVS King',
-      year: '2022',
-      seating_capacity: '4',
-      body_color: 'Silver',
-      fuel_type: 'Gasoline',
-      mileage: '15000',
-      maintenance_status: 'Good',
+  const { data: driver } = useQuery<Driver | null>({
+    queryKey: ['driver-details', tricycleDetails?.assigned_driver],
+    queryFn: async () => {
+      if (!tricycleDetails?.assigned_driver) return null;
+      const { data, error } = await fetchDriverDetails(tricycleDetails.assigned_driver);
+      if (error) {
+        return null;
+      }
+      return data;
     },
-    compliance_details: {
-      registration_number: 'REG-91011',
-      franchise_number: '0423',
-      or_number: 'OR-151617',
-      cr_number: 'CR-181920',
-    },
-  };
+  });
 
-  const openModal = (personnel: Personnel) => {
+  const { data: operator } = useQuery<Operator | null>({
+    queryKey: ['operator-details', tricycleDetails?.operator_id],
+    queryFn: async () => {
+      if (!tricycleDetails?.operator_id) return null;
+      const { data, error } = await fetchOperatorDetails(tricycleDetails.operator_id);
+      if (error) {
+        return null;
+      }
+      return data;
+    },
+  });
+
+  const openModal = (personnel: Operator | Driver) => {
     setSelectedPersonnel(personnel);
     setModalVisible(true);
   };
@@ -71,6 +56,10 @@ export default function InRidePage() {
     setModalVisible(false);
     setSelectedPersonnel(null);
   };
+
+  if (!tricycleDetails) return null;
+  if (!driver) return null;
+  if (!operator) return null;
 
   return (
     <View style={styles.pageContainer}>
@@ -91,7 +80,7 @@ export default function InRidePage() {
           <View style={styles.keyDetailsContainer}>
             <View style={styles.keyDetailItem}>
               <MaterialIcons name="numbers" size={24} color={theme.colors.primary[600]} />
-              <Text style={styles.keyDetailValue}>{tricycle.plate_number}</Text>
+              <Text style={styles.keyDetailValue}>{tricycleDetails.plate_number}</Text>
               <Text style={styles.keyDetailLabel}>Plate Number</Text>
             </View>
             <View style={styles.keyDetailItem}>
@@ -101,13 +90,15 @@ export default function InRidePage() {
                 color={theme.colors.primary[600]}
               />
               <Text style={styles.keyDetailValue}>
-                {tricycle.compliance_details.franchise_number}
+                {tricycleDetails.compliance_details.franchise_number}
               </Text>
               <Text style={styles.keyDetailLabel}>Franchise No.</Text>
             </View>
             <View style={styles.keyDetailItem}>
               <MaterialIcons name="color-lens" size={24} color={theme.colors.primary[600]} />
-              <Text style={styles.keyDetailValue}>{tricycle.tricycle_details.body_color}</Text>
+              <Text style={styles.keyDetailValue}>
+                {tricycleDetails.tricycle_details.body_number}
+              </Text>
               <Text style={styles.keyDetailLabel}>Body Color</Text>
             </View>
           </View>
@@ -123,12 +114,13 @@ export default function InRidePage() {
                 <AntDesign name="user" size={24} color={theme.colors.gray[800]} />
               </View>
               <View style={styles.personnelInfo}>
-                <Text style={styles.personnelName}>{driver.name}</Text>
-                <Text style={styles.personnelRole}>{driver.role}</Text>
+                <Text
+                  style={styles.personnelName}>{`${driver.first_name} ${driver.last_name}`}</Text>
+                <Text style={styles.personnelRole}>Driver</Text>
               </View>
               <View style={styles.ratingContainer}>
                 <AntDesign name="star" size={16} color={theme.colors.gray[700]} />
-                <Text style={styles.ratingText}>{driver.rating.toFixed(1)}</Text>
+                {/* <Text style={styles.ratingText}>{driver.rating.toFixed(1)}</Text> */}
               </View>
               <AntDesign name="right" size={16} color={theme.colors.gray[400]} />
             </TouchableOpacity>
@@ -137,12 +129,15 @@ export default function InRidePage() {
                 <AntDesign name="user" size={24} color={theme.colors.gray[800]} />
               </View>
               <View style={styles.personnelInfo}>
-                <Text style={styles.personnelName}>{operator.name}</Text>
-                <Text style={styles.personnelRole}>{operator.role}</Text>
+                <Text
+                  style={
+                    styles.personnelName
+                  }>{`${operator.first_name} ${operator.last_name}`}</Text>
+                <Text style={styles.personnelRole}>Operator</Text>
               </View>
               <View style={styles.ratingContainer}>
                 <AntDesign name="star" size={16} color={theme.colors.gray[700]} />
-                <Text style={styles.ratingText}>{operator.rating.toFixed(1)}</Text>
+                {/* <Text style={styles.ratingText}>{operator.rating.toFixed(1)}</Text> */}
               </View>
               <AntDesign name="right" size={16} color={theme.colors.gray[400]} />
             </TouchableOpacity>

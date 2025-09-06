@@ -1,7 +1,7 @@
+import { Session, User } from '@supabase/supabase-js';
 import { useRouter } from 'expo-router';
 import { createContext, useEffect, useState } from 'react';
 import { supabase } from '../services/supabase';
-import { Session, User } from '@supabase/supabase-js';
 
 type AuthContextType = {
   signInWithPhoneNumber: (phone_number: string, password: string) => void;
