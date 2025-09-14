@@ -9,3 +9,9 @@ export function formatDate(dateString: string): string {
 
   return date.toLocaleDateString('en-US', options);
 }
+
+export function getErrorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  if (typeof err === 'string') return err;
+  return 'Something went wrong';
+}

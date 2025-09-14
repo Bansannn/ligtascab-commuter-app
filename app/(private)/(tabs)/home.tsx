@@ -68,7 +68,7 @@ export default function HomePage() {
           )}
           <TouchableOpacity
             style={styles.cardLinkButton}
-            onPress={() => router.push('/inside/(tabs)/history')}>
+            onPress={() => router.push('/(private)/(tabs)/history')}>
             <Text style={styles.cardLinkButtonText}>View Full History</Text>
             <MaterialIcons name="arrow-forward" size={16} color={theme.colors.primary[600]} />
           </TouchableOpacity>

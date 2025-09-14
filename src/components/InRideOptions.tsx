@@ -5,13 +5,28 @@ import RatingModal from './RatingModal';
 import ReportModal from './ReportModal';
 import ReportConfirmationModal from './ReportConfirmationModal';
 import { theme } from '../theme/theme';
+import { useMutation } from '@tanstack/react-query';
+import { updateRide } from '../services/ride';
 
-export default function InRideOptions() {
+export default function InRideOptions({ ride_id }: { ride_id: string }) {
   const router = useRouter();
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showReportConfirmation, setShowReportConfirmation] = useState(false);
   const [reportTicketNumber, setReportTicketNumber] = useState('');
+
+  const endRideMutation = useMutation({
+    mutationFn: async (ride_id: string) => {
+      await updateRide(ride_id);
+    },
+  });
+
+  const handleEndRide = async () => {
+    endRideMutation.mutate(ride_id);
+    router.push({
+      pathname: '/(private)/(tabs)/home',
+    });
+  };
 
   const generateTicketNumber = () => {
     const timestamp = Date.now().toString().slice(-6);
@@ -39,15 +54,11 @@ export default function InRideOptions() {
     setShowReportConfirmation(false);
   };
 
-  const handleEndRide = () => {
-    setShowRatingModal(true);
-  };
-
   const handleRatingSubmit = (rating: number, comment: string) => {
     console.log('Rating submitted:', { rating, comment });
     setShowRatingModal(false);
     router.push({
-      pathname: '/inside/home',
+      pathname: '/(private)/(tabs)/home',
       params: { tricycle_id: '' },
     });
   };
@@ -62,7 +73,7 @@ export default function InRideOptions() {
         <Text style={styles.reportButtonText}>Report</Text>
       </Pressable>
       <Pressable style={styles.endRideButton} onPress={handleEndRide}>
-        <Text style={styles.endRideButtonText}>End Ride</Text>
+        <Text style={styles.endRideButtonText}>End RideAAAAAAAAA</Text>
       </Pressable>
 
       <RatingModal

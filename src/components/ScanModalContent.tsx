@@ -1,7 +1,11 @@
+import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { ActivityIndicator, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
-import { theme } from '../theme/theme';
 import { useRide } from '../hooks/useRide';
+import { createNewRide } from '../services/ride';
+import { theme } from '../theme/theme';
+import { Tricycle } from '../types';
+import { getErrorMessage } from '../utils/utils';
 
 type ScanModalContentProps = {
   visible: boolean;
@@ -15,7 +19,26 @@ export default function ScanModalContent({
   exitModalHandler,
 }: ScanModalContentProps) {
   const router = useRouter();
-  const { tricycleDetails } = useRide();
+  const { tricycleDetails, setRideDetails } = useRide();
+
+  const createRideMutation = useMutation({
+    mutationFn: async (data: Tricycle) => createNewRide(tricycleDetails!),
+  });
+
+  const onConfirm = async () => {
+    try {
+      const rideDetails = await createRideMutation.mutateAsync(tricycleDetails!);
+      setRideDetails(rideDetails);
+      exitModalHandler();
+      router.push({
+        pathname: '/(private)/in-ride',
+      });
+    } catch (error) {
+      // toast.error(getErrorMessage(error));
+      console.log(getErrorMessage(error));
+    }
+  };
+
   return (
     <Modal visible={visible} transparent animationType="none" statusBarTranslucent>
       <View style={styles.modalOverlay}>
@@ -23,43 +46,65 @@ export default function ScanModalContent({
           {isLoading ? (
             <ActivityIndicator />
           ) : (
-            <View style={styles.modalTricycleCard}>
-              <Text style={styles.tricycleCardHeader}>Confirm Tricycle</Text>
-              <View style={styles.tricycleCardContent}>
-                <View style={styles.tricycleDetailsContainer}>
-                  <View>
-                    <Text style={styles.tricycleCardDescription}>Chasis Franchise Number</Text>
-                    <Text style={styles.tricycleDetailsTitle}>
-                      {tricycleDetails?.compliance_details.franchise_number}
-                    </Text>
+            <>
+              {tricycleDetails?.status === 'active' ? (
+                <View style={styles.modalTricycleCard}>
+                  <Text style={styles.tricycleCardHeader}>Confirm Tricycle</Text>
+                  <View style={styles.tricycleCardContent}>
+                    <View style={styles.tricycleDetailsContainer}>
+                      <View>
+                        <Text style={styles.tricycleCardDescription}>Plate Number</Text>
+                        <Text style={styles.tricycleDetailsTitle}>
+                          {tricycleDetails?.plate_number}
+                        </Text>
+                      </View>
+                    </View>
                   </View>
-                  <View>
-                    <Text style={styles.tricycleCardDescription}>Chasis Body Color</Text>
-                    {/* <Text style={styles.tricycleDetailsTitle}>
-                      {tricycle.tricycle_details.body_color}
-                    </Text> */}
+                  <Text style={styles.tricycleCardDescription}>Are the details correct?</Text>
+                  <View style={styles.tricycleCardButtonContainer}>
+                    <Pressable
+                      style={[styles.tricycleCardButton, styles.noButton]}
+                      onPress={exitModalHandler}>
+                      <Text style={styles.noButtonText}>No</Text>
+                    </Pressable>
+                    <Pressable
+                      style={[styles.tricycleCardButton, styles.yesButton]}
+                      onPress={onConfirm}>
+                      <Text style={styles.yesButtonText}>Yes</Text>
+                    </Pressable>
                   </View>
                 </View>
-              </View>
-              <Text style={styles.tricycleCardDescription}>Are the details correct?</Text>
-              <View style={styles.tricycleCardButtonContainer}>
-                <Pressable
-                  style={[styles.tricycleCardButton, styles.noButton]}
-                  onPress={exitModalHandler}>
-                  <Text style={styles.noButtonText}>No</Text>
-                </Pressable>
-                <Pressable
-                  style={[styles.tricycleCardButton, styles.yesButton]}
-                  onPress={() => {
-                    exitModalHandler();
-                    router.push({
-                      pathname: '/(private)/in-ride',
-                    });
-                  }}>
-                  <Text style={styles.yesButtonText}>Yes</Text>
-                </Pressable>
-              </View>
-            </View>
+              ) : (
+                <View style={styles.modalTricycleCard}>
+                  <Text style={styles.tricycleCardHeader}>
+                    Tricycle is currently inactive in our database
+                  </Text>
+                  <View style={styles.tricycleCardContent}>
+                    <View style={styles.tricycleDetailsContainer}>
+                      <View>
+                        <Text style={styles.tricycleCardDescription}>Plate Number</Text>
+                        <Text style={styles.tricycleDetailsTitle}>
+                          {tricycleDetails?.plate_number}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  <Text style={styles.tricycleCardDescription}>Would you like to continue?</Text>
+                  <View style={styles.tricycleCardButtonContainer}>
+                    <Pressable
+                      style={[styles.tricycleCardButton, styles.noButton]}
+                      onPress={exitModalHandler}>
+                      <Text style={styles.noButtonText}>No</Text>
+                    </Pressable>
+                    <Pressable
+                      style={[styles.tricycleCardButton, styles.yesButton]}
+                      onPress={onConfirm}>
+                      <Text style={styles.yesButtonText}>Yes</Text>
+                    </Pressable>
+                  </View>
+                </View>
+              )}
+            </>
           )}
         </View>
       </View>

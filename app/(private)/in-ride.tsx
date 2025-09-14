@@ -5,7 +5,6 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from '@expo/vector-icons';
-import { useQuery } from '@tanstack/react-query';
 import { Image } from 'expo-image';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -13,39 +12,14 @@ import EmergencyModal from '~/src/components/EmergencyModal';
 import InRideOptions from '~/src/components/InRideOptions';
 import PersonnelRatingModal from '~/src/components/PersonnelRatingModal';
 import { useRide } from '~/src/hooks/useRide';
-import { fetchDriverDetails, fetchOperatorDetails } from '~/src/services/db';
 import { theme } from '~/src/theme/theme';
 import { Driver, Operator } from '~/src/types';
 
 export default function InRidePage() {
-  const { tricycleDetails } = useRide();
+  const { rideDetails } = useRide();
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedPersonnel, setSelectedPersonnel] = useState<Driver | Operator | null>(null);
   const [isEmergencyModalVisible, setEmergencyModalVisible] = useState(false);
-
-  const { data: driver } = useQuery<Driver | null>({
-    queryKey: ['driver-details', tricycleDetails?.assigned_driver],
-    queryFn: async () => {
-      if (!tricycleDetails?.assigned_driver) return null;
-      const { data, error } = await fetchDriverDetails(tricycleDetails.assigned_driver);
-      if (error) {
-        return null;
-      }
-      return data;
-    },
-  });
-
-  const { data: operator } = useQuery<Operator | null>({
-    queryKey: ['operator-details', tricycleDetails?.operator_id],
-    queryFn: async () => {
-      if (!tricycleDetails?.operator_id) return null;
-      const { data, error } = await fetchOperatorDetails(tricycleDetails.operator_id);
-      if (error) {
-        return null;
-      }
-      return data;
-    },
-  });
 
   const openModal = (personnel: Operator | Driver) => {
     setSelectedPersonnel(personnel);
@@ -57,9 +31,7 @@ export default function InRidePage() {
     setSelectedPersonnel(null);
   };
 
-  if (!tricycleDetails) return null;
-  if (!driver) return null;
-  if (!operator) return null;
+  if (!rideDetails) return null;
 
   return (
     <View style={styles.pageContainer}>
@@ -73,14 +45,14 @@ export default function InRidePage() {
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Tricycle Details</Text>
-            <Text style={styles.rideId}>Ride ID: 01239123582343</Text>
+            <Text style={styles.rideId}>Ride ID: {rideDetails.id.slice(0, 13).toUpperCase()}</Text>
           </View>
 
           {/* Key Details */}
           <View style={styles.keyDetailsContainer}>
             <View style={styles.keyDetailItem}>
               <MaterialIcons name="numbers" size={24} color={theme.colors.primary[600]} />
-              <Text style={styles.keyDetailValue}>{tricycleDetails.plate_number}</Text>
+              <Text style={styles.keyDetailValue}>{rideDetails.tricycle_details.plate_number}</Text>
               <Text style={styles.keyDetailLabel}>Plate Number</Text>
             </View>
             <View style={styles.keyDetailItem}>
@@ -90,17 +62,17 @@ export default function InRidePage() {
                 color={theme.colors.primary[600]}
               />
               <Text style={styles.keyDetailValue}>
-                {tricycleDetails.compliance_details.franchise_number}
+                {rideDetails.tricycle_details.compliance_details.franchise_number}
               </Text>
               <Text style={styles.keyDetailLabel}>Franchise No.</Text>
             </View>
-            <View style={styles.keyDetailItem}>
+            {/* <View style={styles.keyDetailItem}>
               <MaterialIcons name="color-lens" size={24} color={theme.colors.primary[600]} />
               <Text style={styles.keyDetailValue}>
                 {tricycleDetails.tricycle_details.body_number}
               </Text>
               <Text style={styles.keyDetailLabel}>Body Color</Text>
-            </View>
+            </View> */}
           </View>
 
           {/* Personnel Section */}
@@ -109,13 +81,17 @@ export default function InRidePage() {
               <FontAwesome5 name="user-cog" size={18} color={theme.colors.gray[100]} />
               <Text style={styles.sectionTitle}>Driver & Operator</Text>
             </View>
-            <TouchableOpacity style={styles.personnelItem} onPress={() => openModal(driver)}>
+            <TouchableOpacity
+              style={styles.personnelItem}
+              onPress={() => openModal(rideDetails.driver_details)}>
               <View style={styles.avatar}>
                 <AntDesign name="user" size={24} color={theme.colors.gray[800]} />
               </View>
               <View style={styles.personnelInfo}>
                 <Text
-                  style={styles.personnelName}>{`${driver.first_name} ${driver.last_name}`}</Text>
+                  style={
+                    styles.personnelName
+                  }>{`${rideDetails.driver_details.first_name} ${rideDetails.driver_details.last_name}`}</Text>
                 <Text style={styles.personnelRole}>Driver</Text>
               </View>
               <View style={styles.ratingContainer}>
@@ -124,7 +100,9 @@ export default function InRidePage() {
               </View>
               <AntDesign name="right" size={16} color={theme.colors.gray[400]} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.personnelItem} onPress={() => openModal(operator)}>
+            <TouchableOpacity
+              style={styles.personnelItem}
+              onPress={() => openModal(rideDetails.operator_details)}>
               <View style={styles.avatar}>
                 <AntDesign name="user" size={24} color={theme.colors.gray[800]} />
               </View>
@@ -132,7 +110,7 @@ export default function InRidePage() {
                 <Text
                   style={
                     styles.personnelName
-                  }>{`${operator.first_name} ${operator.last_name}`}</Text>
+                  }>{`${rideDetails.operator_details.first_name} ${rideDetails.operator_details.last_name}`}</Text>
                 <Text style={styles.personnelRole}>Operator</Text>
               </View>
               <View style={styles.ratingContainer}>
@@ -159,7 +137,7 @@ export default function InRidePage() {
       </ScrollView>
 
       <View style={styles.floatingContainer}>
-        <InRideOptions />
+        <InRideOptions ride_id={rideDetails.id} />
         <TouchableOpacity
           style={styles.emergencyButton}
           onPress={() => setEmergencyModalVisible(true)}>
