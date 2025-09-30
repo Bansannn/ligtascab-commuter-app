@@ -1,5 +1,5 @@
 import { MaterialIcons } from '@expo/vector-icons';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
   ActivityIndicator,
@@ -19,6 +19,8 @@ export default function SignUpPage() {
   const [mobileNumber, setMobileNumber] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const router = useRouter();
+
   const handleSendOtp = async () => {
     if (!mobileNumber) {
       Alert.alert('Error', 'Please enter a valid mobile number');
@@ -29,6 +31,10 @@ export default function SignUpPage() {
       setLoading(true);
       const data = await requestOtp(mobileNumber);
       console.log(data);
+      router.replace({
+        pathname: '/(authentication)/verify-otp',
+        params: { mobileNumber, code: data[0].code },
+      });
     } catch (err) {
       console.error(err);
       Alert.alert('Error', 'Something went wrong.');

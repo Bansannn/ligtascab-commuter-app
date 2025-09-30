@@ -1,5 +1,5 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -13,12 +13,13 @@ import { theme } from '~/src/theme/theme';
 
 export default function VerifyOtpPage() {
   const [otp, setOtp] = useState('');
-  const { mobileNumber } = useLocalSearchParams();
+  const { mobileNumber, code } = useLocalSearchParams();
   const router = useRouter();
 
   const handleVerify = () => {
-    // Navigate to the complete profile screen after verification
-    router.replace({ pathname: '/complete-profile', params: { mobileNumber } });
+    if (code === otp) {
+      router.replace({ pathname: '/complete-profile', params: { mobileNumber } });
+    }
   };
 
   return (

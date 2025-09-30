@@ -62,7 +62,7 @@ export default function SignInPage() {
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>Don&apos;t have an account? </Text>
-          <TouchableOpacity onPress={() => router.push('/sign-up')}>
+          <TouchableOpacity onPress={() => router.push('/complete-profile')}>
             <Text style={[styles.footerText, styles.linkText]}>Sign Up</Text>
           </TouchableOpacity>
         </View>
