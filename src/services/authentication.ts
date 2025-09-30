@@ -31,6 +31,7 @@ export const registerWithCredentials = async (User: unknown) => {
     options: {
       data: {
         role: 'commuter',
+        name: result.data.name,
       },
     },
   });

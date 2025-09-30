@@ -7,6 +7,12 @@ export const fetchDriverDetails = async (driver_id: string) => {
   return { data, error };
 };
 
+export const fetchCommuterDetails = async (id: string) => {
+  const { data, error } = await supabase.from('commuters').select('*').eq('id', id).single();
+
+  return { data, error };
+};
+
 export const fetchOperatorDetails = async (operator_id: string) => {
   const { data, error } = await supabase
     .from('operators')
