@@ -76,9 +76,7 @@ export default function ScanModalContent({
                 </View>
               ) : (
                 <View style={styles.modalTricycleCard}>
-                  <Text style={styles.tricycleCardHeader}>
-                    Tricycle is currently inactive in our database
-                  </Text>
+                  <Text style={styles.tricycleCardHeader}>Tricycle is Inactive</Text>
                   <View style={styles.tricycleCardContent}>
                     <View style={styles.tricycleDetailsContainer}>
                       <View>
@@ -89,17 +87,14 @@ export default function ScanModalContent({
                       </View>
                     </View>
                   </View>
-                  <Text style={styles.tricycleCardDescription}>Would you like to continue?</Text>
+                  <Text style={styles.tricycleCardDescription}>
+                    This tricycle cannot be used to confirm ride.
+                  </Text>
                   <View style={styles.tricycleCardButtonContainer}>
                     <Pressable
                       style={[styles.tricycleCardButton, styles.noButton]}
                       onPress={exitModalHandler}>
-                      <Text style={styles.noButtonText}>No</Text>
-                    </Pressable>
-                    <Pressable
-                      style={[styles.tricycleCardButton, styles.yesButton]}
-                      onPress={onConfirm}>
-                      <Text style={styles.yesButtonText}>Yes</Text>
+                      <Text style={styles.noButtonText}>Cancel</Text>
                     </Pressable>
                   </View>
                 </View>
