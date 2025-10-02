@@ -1,23 +1,15 @@
 import { AntDesign, Feather } from '@expo/vector-icons';
-import React, { useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import ReportConfirmationModal from '~/src/components/ReportConfirmationModal';
 import ReportDetailModal from '~/src/components/ReportDetailModal';
 import ReportModal from '~/src/components/ReportModal';
 import RideDetailModal from '~/src/components/RideDetailModal';
+import { fetchRideHistory } from '~/src/services/ride';
 import { theme } from '~/src/theme/theme';
-
-// Expanded Mock Data Types
-export interface Ride {
-  id: string;
-  date: string;
-  driver: string;
-  plateNumber: string;
-  fare: string;
-  startTime: string;
-  endTime: string;
-  route: string;
-}
+import { Ride } from '~/src/types';
+import { formatDate } from '~/src/utils/utils';
 
 export interface Report {
   id: string;
@@ -27,40 +19,6 @@ export interface Report {
   status: 'Resolved' | 'Pending';
   comment: string;
 }
-
-// Expanded Mock Data
-export const rideHistory: Ride[] = [
-  {
-    id: 'ride1',
-    date: 'Wed July 9, 2025',
-    driver: 'Walt Haughfin',
-    plateNumber: 'MCP-1234',
-    fare: '₱15.00',
-    startTime: '08:15 AM',
-    endTime: '08:30 AM',
-    route: 'Centro ↔ Panganiban',
-  },
-  {
-    id: 'ride2',
-    date: 'Tues July 8, 2025',
-    driver: 'John Doe',
-    plateNumber: 'ABC-5678',
-    fare: '₱15.00',
-    startTime: '09:00 AM',
-    endTime: '09:20 AM',
-    route: 'Centro ↔ Penafrancia',
-  },
-  {
-    id: 'ride3',
-    date: 'Sun June 1, 2025', // Older than 7 days
-    driver: 'Jane Smith',
-    plateNumber: 'XYZ-1122',
-    fare: '₱15.00',
-    startTime: '01:00 PM',
-    endTime: '01:10 PM',
-    route: 'Centro ↔ Sabang',
-  },
-];
 
 const reportHistory: Report[] = [
   {
@@ -112,17 +70,10 @@ export default function HistoryPage() {
   const [showReportConfirmation, setShowReportConfirmation] = useState(false);
   const [reportTicketNumber, setReportTicketNumber] = useState('');
 
-  const filteredRides = useMemo(
-    () =>
-      rideHistory
-        .filter(
-          (ride) =>
-            ride.driver.toLowerCase().includes(filter.toLowerCase()) ||
-            ride.plateNumber.toLowerCase().includes(filter.toLowerCase())
-        )
-        .slice(0, 10), // Show max 10 rides
-    [filter]
-  );
+  const { data: ride_history } = useQuery<Ride[]>({
+    queryKey: ['ride_history'],
+    queryFn: fetchRideHistory,
+  });
 
   const generateTicketNumber = () => {
     const timestamp = Date.now().toString().slice(-6);
@@ -154,7 +105,7 @@ export default function HistoryPage() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Ride History</Text>
           <View style={styles.filterContainer}>
-            <AntDesign name="search1" size={20} color={theme.colors.gray[400]} />
+            <AntDesign name="search" size={20} color={theme.colors.gray[400]} />
             <TextInput
               style={styles.filterInput}
               placeholder="Filter by driver or plate number..."
@@ -169,19 +120,35 @@ export default function HistoryPage() {
               <Text style={[styles.headerCell, { flex: 2 }]}>Date</Text>
               <Text style={[styles.headerCell, { flex: 1, textAlign: 'right' }]}>Fare</Text>
             </View>
-            {filteredRides.map((ride) => (
-              <TouchableOpacity
-                key={ride.id}
-                style={styles.tableRow}
-                onPress={() => setSelectedRide(ride)}>
-                <View style={{ flex: 3 }}>
-                  <Text style={styles.cellTextBold}>{ride.driver}</Text>
-                  <Text style={styles.cellTextSubtle}>{ride.plateNumber}</Text>
-                </View>
-                <Text style={[styles.cellText, { flex: 2 }]}>{ride.date}</Text>
-                <Text style={[styles.cellText, { flex: 1, textAlign: 'right' }]}>{ride.fare}</Text>
-              </TouchableOpacity>
-            ))}
+            {ride_history && ride_history.length > 0 ? (
+              <>
+                {ride_history.map((ride: Ride) => (
+                  <TouchableOpacity
+                    key={ride.id}
+                    style={styles.tableRow}
+                    onPress={() => setSelectedRide(ride)}>
+                    <View style={{ flex: 3 }}>
+                      <Text style={styles.cellTextBold}>
+                        {ride.tricycle_details.assigned_driver}
+                      </Text>
+                      <Text style={styles.cellTextSubtle}>
+                        {ride.tricycle_details.plate_number}
+                      </Text>
+                    </View>
+                    <Text style={[styles.cellText, { flex: 2 }]}>
+                      {formatDate(ride.end_time.toLocaleString())}
+                    </Text>
+                    <Text style={[styles.cellText, { flex: 1, textAlign: 'right' }]}>
+                      {ride.fare}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </>
+            ) : (
+              <View style={styles.card}>
+                <Text style={styles.headerCell}>You have no recent ride history</Text>
+              </View>
+            )}
           </View>
         </View>
 

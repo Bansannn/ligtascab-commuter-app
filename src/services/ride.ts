@@ -71,3 +71,15 @@ export const fetchRecentRide = async (): Promise<Ride> => {
 
   return data;
 };
+
+export const fetchRideHistory = async (): Promise<Ride[]> => {
+  const { data, error } = await supabase
+    .from('rides')
+    .select('*', { count: 'exact' })
+    .order('created_at', { ascending: false })
+    .range(0, 5);
+
+  if (error) throw new Error(error?.message || 'No recent ride history');
+
+  return data;
+};
