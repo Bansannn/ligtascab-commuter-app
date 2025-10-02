@@ -6,8 +6,8 @@ import { Commuter } from '../types';
 import { fetchCommuterDetails } from '../services/db';
 
 type AuthContextType = {
-  signInWithPhoneNumber: (phone_number: string, password: string) => void;
-  signOutUser: () => void;
+  signInWithPhoneNumber: (phone_number: string, password: string) => Promise<string | void>;
+  signOutUser: () => Promise<string | void>;
   session: Session | null;
   user: Commuter | null;
   authChecked: boolean;
@@ -21,16 +21,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [authChecked, setAuthChecked] = useState(false);
   const router = useRouter();
 
-  async function getInitialUserValue() {
-    try {
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        setSession(session);
-      });
-
-      if (session?.user) {
-        const { data } = await fetchCommuterDetails(session.user.id);
-        setUser(data);
-      }
+  useEffect(() => {
+    const init = async () => {
+      const { data } = await supabase.auth.getSession();
+      setSession(data.session);
 
       const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
         setSession(session);
@@ -39,18 +33,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return () => {
         listener.subscription.unsubscribe();
       };
-    } catch (error) {
-      console.log(error);
-      setSession(null);
-      setUser(null);
-    } finally {
+    };
+
+    init().finally(() => {
       setAuthChecked(true);
-    }
-  }
+    });
+  }, []);
 
   useEffect(() => {
-    getInitialUserValue();
-  }, []);
+    const loadCommuter = async () => {
+      if (session?.user?.id) {
+        const { data: commuter, error } = await fetchCommuterDetails(session.user.id);
+        if (!error) {
+          setUser(commuter);
+        } else {
+          console.error('Failed to fetch commuter:', error.message);
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+    };
+
+    loadCommuter();
+  }, [session]);
 
   async function signInWithPhoneNumber(phone_number: string, password: string) {
     const { data, error } = await supabase.auth.signInWithPassword({
