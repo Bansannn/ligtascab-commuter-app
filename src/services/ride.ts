@@ -58,3 +58,16 @@ export const updateRide = async (ride_id: string) => {
 
   return { data, error };
 };
+
+export const fetchRecentRide = async (): Promise<Ride> => {
+  const { data, error } = await supabase
+    .from('rides')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) throw new Error(error?.message || 'No recent ride');
+
+  return data;
+};

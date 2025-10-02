@@ -1,9 +1,12 @@
 import { MaterialIcons } from '@expo/vector-icons';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
-import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { rideHistory } from './history';
+import { useAuth } from '~/src/hooks/useAuth';
+import { fetchRecentRide } from '~/src/services/ride';
 import { theme } from '~/src/theme/theme';
+import { Ride } from '~/src/types';
+import { formatDate } from '~/src/utils/utils';
 
 const QuickActionButton = ({ icon, label, onPress }) => (
   <TouchableOpacity style={styles.actionButton} onPress={onPress}>
@@ -14,12 +17,17 @@ const QuickActionButton = ({ icon, label, onPress }) => (
 
 export default function HomePage() {
   const router = useRouter();
-  const lastRide = rideHistory.length > 0 ? rideHistory[0] : null;
+  const { user } = useAuth();
+
+  const { data: recent_ride } = useQuery<Ride | null>({
+    queryKey: ['recent_ride'],
+    queryFn: fetchRecentRide,
+  });
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <View style={styles.header}>
-        <Text style={styles.greeting}>Hello, Vincent!</Text>
+        <Text style={styles.greeting}>Hello, {user?.first_name}!</Text>
         <Text style={styles.subtitle}>Ready for your next safe ride?</Text>
       </View>
 
@@ -44,23 +52,28 @@ export default function HomePage() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Recent Ride</Text>
         <View style={styles.card}>
-          {lastRide ? (
+          {recent_ride ? (
             <>
               <View style={styles.cardRow}>
                 <Text style={styles.cardLabel}>Driver</Text>
-                <Text style={styles.cardValue}>{lastRide.driver}</Text>
+                <Text
+                  style={
+                    styles.cardValue
+                  }>{`${recent_ride.driver_details.first_name} ${recent_ride.driver_details.last_name}`}</Text>
               </View>
               <View style={styles.cardRow}>
                 <Text style={styles.cardLabel}>Plate No.</Text>
-                <Text style={styles.cardValue}>{lastRide.plateNumber}</Text>
+                <Text style={styles.cardValue}>{recent_ride.tricycle_details.plate_number}</Text>
               </View>
               <View style={styles.cardRow}>
                 <Text style={styles.cardLabel}>Date</Text>
-                <Text style={styles.cardValue}>{lastRide.date}</Text>
+                <Text style={styles.cardValue}>
+                  {formatDate(recent_ride.end_time.toLocaleString())}
+                </Text>
               </View>
               <View style={styles.cardRow}>
                 <Text style={styles.cardLabel}>Fare</Text>
-                <Text style={styles.cardValueBold}>{lastRide.fare}</Text>
+                <Text style={styles.cardValueBold}>{recent_ride.fare}</Text>
               </View>
             </>
           ) : (
