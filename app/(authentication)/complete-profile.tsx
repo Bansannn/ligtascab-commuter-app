@@ -1,7 +1,10 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import {
+  ActivityIndicator,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -11,20 +14,27 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import z from 'zod';
+import { registerWithCredentials } from '~/src/services/authentication';
 import { theme } from '~/src/theme/theme';
+import { RegisterSchema } from '~/src/utils/schemas';
 
 const ProfileInput = ({
   label,
   icon,
   value,
-  onChangeText,
-  ...props
+  onChange,
+  placeholder,
+  secureTextEntry,
+  keyboardType,
 }: {
   label: string;
   icon: keyof typeof MaterialIcons.glyphMap;
   value: string;
-  onChangeText: (text: string) => void;
-  [key: string]: any;
+  onChange: (text: string) => void;
+  placeholder: string;
+  secureTextEntry?: boolean;
+  keyboardType?: 'default' | 'email-address' | 'phone-pad';
 }) => (
   <View style={styles.inputGroup}>
     <Text style={styles.label}>{label}</Text>
@@ -33,28 +43,53 @@ const ProfileInput = ({
       <TextInput
         style={styles.input}
         value={value}
-        onChangeText={onChangeText}
+        onChangeText={onChange}
+        placeholder={placeholder}
         placeholderTextColor={theme.colors.gray[500]}
-        {...props}
+        secureTextEntry={secureTextEntry}
+        keyboardType={keyboardType}
       />
     </View>
   </View>
 );
 
 export default function CompleteProfilePage() {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { mobileNumber } = useLocalSearchParams();
 
-  const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<z.infer<typeof RegisterSchema>>({
+    defaultValues: {
+      name: '',
+      phone: mobileNumber as string,
+      address: '',
+      email: '',
+      password: '',
+      confirm_password: '',
+    },
+  });
 
-  const handleCompleteSignUp = () => {
-    // Add validation (e.g., check if passwords match)
-    // For presentation, we navigate directly
-    router.replace('/inside/(tabs)/home');
+  const password = watch('password');
+
+  const onSubmit = async (data: z.infer<typeof RegisterSchema>) => {
+    try {
+      const commuter = await registerWithCredentials(data);
+      console.log(commuter);
+      if (commuter) {
+        router.push('/(private)/(tabs)/home');
+      }
+    } catch (error) {
+      console.log(error);
+      console.error(error);
+      Alert.alert('Error', 'Something went wrong.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -67,47 +102,119 @@ export default function CompleteProfilePage() {
         <Text style={styles.subtitle}>Complete your profile to finish signing up.</Text>
 
         <View style={styles.formContainer}>
-          <ProfileInput
-            label="Full Name"
-            icon="person-outline"
-            value={name}
-            onChangeText={setName}
-            placeholder="Enter your full name"
-          />
-          <ProfileInput
-            label="Address"
-            icon="home"
-            value={address}
-            onChangeText={setAddress}
-            placeholder="Enter your address"
-          />
-          <ProfileInput
-            label="Email Address"
-            icon="mail-outline"
-            value={email}
-            onChangeText={setEmail}
-            placeholder="Enter your email"
-            keyboardType="email-address"
-          />
-          <ProfileInput
-            label="Password"
-            icon="lock-outline"
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Create a password"
-            secureTextEntry
-          />
-          <ProfileInput
-            label="Confirm Password"
-            icon="lock-outline"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            placeholder="Confirm your password"
-            secureTextEntry
+          <Controller
+            control={control}
+            name="name"
+            rules={{ required: 'Full name is required' }}
+            render={({ field: { value, onChange } }) => (
+              <>
+                <ProfileInput
+                  label="Full Name"
+                  icon="person-outline"
+                  value={value}
+                  onChange={onChange}
+                  placeholder="Enter your full name"
+                />
+                {errors.name && <Text style={styles.error}>{errors.name.message}</Text>}
+              </>
+            )}
           />
 
-          <TouchableOpacity style={styles.button} onPress={handleCompleteSignUp}>
-            <Text style={styles.buttonText}>Complete Sign Up</Text>
+          <Controller
+            control={control}
+            name="address"
+            rules={{ required: 'Address is required' }}
+            render={({ field: { value, onChange } }) => (
+              <>
+                <ProfileInput
+                  label="Address"
+                  icon="home"
+                  value={value}
+                  onChange={onChange}
+                  placeholder="Enter your address"
+                />
+                {errors.address && <Text style={styles.error}>{errors.address.message}</Text>}
+              </>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="email"
+            rules={{
+              required: 'Email is required',
+              pattern: { value: /\S+@\S+\.\S+/, message: 'Invalid email address' },
+            }}
+            render={({ field: { value, onChange } }) => (
+              <>
+                <ProfileInput
+                  label="Email Address"
+                  icon="mail-outline"
+                  value={value}
+                  onChange={onChange}
+                  placeholder="Enter your email"
+                  keyboardType="email-address"
+                />
+                {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
+              </>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="password"
+            rules={{
+              required: 'Password is required',
+              minLength: { value: 6, message: 'Password must be at least 6 characters' },
+            }}
+            render={({ field: { value, onChange } }) => (
+              <>
+                <ProfileInput
+                  label="Password"
+                  icon="lock-outline"
+                  value={value}
+                  onChange={onChange}
+                  placeholder="Create a password"
+                  secureTextEntry
+                />
+                {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
+              </>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="confirm_password"
+            rules={{
+              required: 'Please confirm your password',
+              validate: (value) => value === password || 'Passwords do not match',
+            }}
+            render={({ field: { value, onChange } }) => (
+              <>
+                <ProfileInput
+                  label="Confirm Password"
+                  icon="lock-outline"
+                  value={value}
+                  onChange={onChange}
+                  placeholder="Confirm your password"
+                  secureTextEntry
+                />
+                {errors.confirm_password && (
+                  <Text style={styles.error}>{errors.confirm_password.message}</Text>
+                )}
+              </>
+            )}
+          />
+
+          <TouchableOpacity
+            style={[styles.button, loading && { opacity: 0.7 }]}
+            onPress={handleSubmit(onSubmit)}
+            disabled={loading}>
+            {loading ? (
+              <ActivityIndicator color={theme.colors.white} />
+            ) : (
+              <Text style={styles.buttonText}>Complete Sign Up</Text>
+            )}
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -175,5 +282,11 @@ const styles = StyleSheet.create({
     fontFamily: theme.typography.fontFamily.primary.bold,
     fontSize: theme.typography.fontSize.md,
     color: theme.colors.white,
+  },
+  error: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: -8,
+    marginBottom: 8,
   },
 });

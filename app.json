@@ -3,7 +3,6 @@
     "name": "ligtascab-commuter",
     "slug": "ligtascab-commuter",
     "version": "1.0.0",
-
     "scheme": "ligtascab-commuter",
     "web": {
       "bundler": "metro",

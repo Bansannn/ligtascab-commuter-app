@@ -57,6 +57,7 @@ export default function Scan() {
     setScanError(null);
     setCameraDisabled(false);
     setVisible(false);
+    setScanResult('');
   };
 
   return (

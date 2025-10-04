@@ -61,3 +61,26 @@ export type Driver = {
   address: string;
   birth_date: Date;
 };
+
+export type Ride = {
+  id: string;
+  commuter_id: string;
+  tricycle_details: Tricycle;
+  driver_details: Driver;
+  operator_details: Operator;
+  fare: string;
+  start_time: Date;
+  end_time: Date;
+  created_at: Date;
+};
+
+export type Commuter = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  address: string;
+  birth_date: Date | null;
+  created_at: Date;
+};

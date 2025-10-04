@@ -1,4 +1,4 @@
-import { Stack, useRouter } from 'expo-router';
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { AppState, Platform } from 'react-native';
 import GuestViewOnly from '~/src/components/authWrapper/GuestViewOnly';
@@ -15,7 +15,6 @@ AppState.addEventListener('change', (state) => {
 });
 
 export default function AuthLayout() {
-  const router = useRouter();
   return (
     <GuestViewOnly>
       <StatusBar />
