@@ -55,8 +55,8 @@ const ProfileInput = ({
 
 export default function CompleteProfilePage() {
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
   const { mobileNumber } = useLocalSearchParams();
+  const router = useRouter();
 
   const {
     control,

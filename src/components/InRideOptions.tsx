@@ -73,7 +73,7 @@ export default function InRideOptions({ ride_id }: { ride_id: string }) {
         <Text style={styles.reportButtonText}>Report</Text>
       </Pressable>
       <Pressable style={styles.endRideButton} onPress={handleEndRide}>
-        <Text style={styles.endRideButtonText}>End RideAAAAAAAAA</Text>
+        <Text style={styles.endRideButtonText}>End Ride</Text>
       </Pressable>
 
       <RatingModal
