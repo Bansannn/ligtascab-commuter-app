@@ -11,35 +11,6 @@ import { theme } from '~/src/theme/theme';
 import { Ride } from '~/src/types';
 import { formatDate } from '~/src/utils/utils';
 
-export interface Report {
-  id: string;
-  ticketNumber: string;
-  date: string;
-  reason: string;
-  status: 'Resolved' | 'Pending';
-  comment: string;
-}
-
-const reportHistory: Report[] = [
-  {
-    id: 'report1',
-    ticketNumber: 'TRC-123456-XYZ',
-    date: 'July 9, 2025',
-    reason: 'Overcharging',
-    status: 'Resolved',
-    comment: 'The driver asked for ₱50 for a short trip.',
-  },
-  {
-    id: 'report2',
-    ticketNumber: 'TRC-789012-ABC',
-    date: 'July 5, 2025',
-    reason: 'Reckless Driving',
-    status: 'Pending',
-    comment: 'The driver was speeding and not following traffic rules.',
-  },
-];
-
-// Helper Components
 const ReportHistoryCard = ({ report, onPress }: { report: Report; onPress: () => void }) => {
   const isPending = report.status === 'Pending';
   return (
@@ -65,7 +36,6 @@ export default function HistoryPage() {
   const [selectedRide, setSelectedRide] = useState<Ride | null>(null);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
 
-  // State for Report Modals
   const [showReportModal, setShowReportModal] = useState(false);
   const [showReportConfirmation, setShowReportConfirmation] = useState(false);
   const [reportTicketNumber, setReportTicketNumber] = useState('');
@@ -116,27 +86,22 @@ export default function HistoryPage() {
           </View>
           <View style={styles.table}>
             <View style={styles.tableHeader}>
-              <Text style={[styles.headerCell, { flex: 3 }]}>Driver</Text>
+              <Text style={[styles.headerCell, { flex: 3 }]}>Plate Number</Text>
               <Text style={[styles.headerCell, { flex: 2 }]}>Date</Text>
               <Text style={[styles.headerCell, { flex: 1, textAlign: 'right' }]}>Fare</Text>
             </View>
             {ride_history && ride_history.length > 0 ? (
               <>
                 {ride_history.map((ride: Ride) => (
-                  <TouchableOpacity
-                    key={ride.id}
-                    style={styles.tableRow}
-                    onPress={() => setSelectedRide(ride)}>
+                  <TouchableOpacity key={ride.id} style={styles.tableRow}>
                     <View style={{ flex: 3 }}>
-                      <Text style={styles.cellTextBold}>
-                        {ride.tricycle_details.assigned_driver}
-                      </Text>
+                      <Text style={styles.cellTextBold}>{ride.tricycle_details.plate_number}</Text>
                       <Text style={styles.cellTextSubtle}>
                         {ride.tricycle_details.plate_number}
                       </Text>
                     </View>
                     <Text style={[styles.cellText, { flex: 2 }]}>
-                      {formatDate(ride.end_time.toLocaleString())}
+                      {formatDate(ride.created_at.toLocaleString())}
                     </Text>
                     <Text style={[styles.cellText, { flex: 1, textAlign: 'right' }]}>
                       {ride.fare}
@@ -189,6 +154,34 @@ export default function HistoryPage() {
     </View>
   );
 }
+
+export interface Report {
+  id: string;
+  ticketNumber: string;
+  date: string;
+  reason: string;
+  status: 'Resolved' | 'Pending';
+  comment: string;
+}
+
+const reportHistory: Report[] = [
+  {
+    id: 'report1',
+    ticketNumber: 'TRC-123456-XYZ',
+    date: 'July 9, 2025',
+    reason: 'Overcharging',
+    status: 'Resolved',
+    comment: 'The driver asked for ₱50 for a short trip.',
+  },
+  {
+    id: 'report2',
+    ticketNumber: 'TRC-789012-ABC',
+    date: 'July 5, 2025',
+    reason: 'Reckless Driving',
+    status: 'Pending',
+    comment: 'The driver was speeding and not following traffic rules.',
+  },
+];
 
 const styles = StyleSheet.create({
   pageContainer: {

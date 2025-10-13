@@ -143,7 +143,6 @@ export default function CompleteProfilePage() {
             name="email"
             rules={{
               required: 'Email is required',
-              pattern: { value: /\S+@\S+\.\S+/, message: 'Invalid email address' },
             }}
             render={({ field: { value, onChange } }) => (
               <>
@@ -153,7 +152,6 @@ export default function CompleteProfilePage() {
                   value={value}
                   onChange={onChange}
                   placeholder="Enter your email"
-                  keyboardType="email-address"
                 />
                 {errors.email && <Text style={styles.error}>{errors.email.message}</Text>}
               </>

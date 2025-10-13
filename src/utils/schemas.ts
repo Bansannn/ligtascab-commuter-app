@@ -4,7 +4,7 @@ export const RegisterSchema = z.object({
   id: z.uuid().optional(),
   name: z.string(),
   phone: z.string(),
-  email: z.email('Invalid email format'),
+  email: z.string(),
   address: z.string(),
   password: z
     .string()
@@ -24,7 +24,7 @@ export const CreateAccountSchema = z.object({
   first_name: z.string(),
   last_name: z.string(),
   phone_number: z.string(),
-  email: z.email(),
+  email: z.string(),
   address: z.string(),
 });
 

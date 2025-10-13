@@ -27,7 +27,7 @@ export default function HomePage() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <View style={styles.header}>
-        <Text style={styles.greeting}>Hello, {user?.first_name}!</Text>
+        <Text style={styles.greeting}>Hello, Vincent Olpate!</Text>
         <Text style={styles.subtitle}>Ready for your next safe ride?</Text>
       </View>
 
@@ -68,7 +68,7 @@ export default function HomePage() {
               <View style={styles.cardRow}>
                 <Text style={styles.cardLabel}>Date</Text>
                 <Text style={styles.cardValue}>
-                  {formatDate(recent_ride.end_time.toLocaleString())}
+                  {formatDate(recent_ride.created_at.toLocaleString())}
                 </Text>
               </View>
               <View style={styles.cardRow}>

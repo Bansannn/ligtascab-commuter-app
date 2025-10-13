@@ -62,7 +62,7 @@ export default function TerminalsPage() {
       return;
     }
     router.push({
-      pathname: '/inside/terminal-list',
+      pathname: '/(private)/terminal-list',
       params: {
         latitude: userLocation.latitude,
         longitude: userLocation.longitude,
