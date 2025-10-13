@@ -34,7 +34,6 @@ export default function ScanModalContent({
         pathname: '/(private)/in-ride',
       });
     } catch (error) {
-      // toast.error(getErrorMessage(error));
       console.log(getErrorMessage(error));
     }
   };

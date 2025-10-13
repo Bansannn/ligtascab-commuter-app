@@ -2,7 +2,6 @@ import React from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { theme } from '../theme/theme';
-import { Ride } from '~/app/(private)/(tabs)/history';
 
 interface RideDetailModalProps {
   visible: boolean;
@@ -10,6 +9,59 @@ interface RideDetailModalProps {
   ride: Ride | null;
   onReport: () => void;
 }
+
+export interface Ride {
+  id: string;
+
+  date: string;
+
+  driver: string;
+
+  plateNumber: string;
+
+  fare: string;
+
+  startTime: string;
+
+  endTime: string;
+
+  route: string;
+}
+
+const rideHistory: Ride[] = [
+  {
+    id: 'ride1',
+    date: 'Wed July 9, 2025',
+    driver: 'Walt Haughfin',
+    plateNumber: 'MCP-1234',
+    fare: '₱15.00',
+    startTime: '08:15 AM',
+    endTime: '08:30 AM',
+    route: 'Centro ↔ Panganiban',
+  },
+
+  {
+    id: 'ride2',
+    date: 'Tues July 8, 2025',
+    driver: 'John Doe',
+    plateNumber: 'ABC-5678',
+    fare: '₱15.00',
+    startTime: '09:00 AM',
+    endTime: '09:20 AM',
+    route: 'Centro ↔ Penafrancia',
+  },
+
+  {
+    id: 'ride3',
+    date: 'Sun June 1, 2025',
+    driver: 'Jane Smith',
+    plateNumber: 'XYZ-1122',
+    fare: '₱15.00',
+    startTime: '01:00 PM',
+    endTime: '01:10 PM',
+    route: 'Centro ↔ Sabang',
+  },
+];
 
 const DetailRow = ({ label, value }: { label: string; value: string }) => (
   <View style={styles.detailRow}>
